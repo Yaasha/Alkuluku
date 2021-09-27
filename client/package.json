@@ -32,15 +32,15 @@
     ],
     "parserOptions": {
       "parser": "babel-eslint"
-    },
-    "rules": {},
-    "globals": {
-      "google": "readonly"
-    },
-    "browserslist": [
-      "> 1%",
-      "last 2 versions",
-      "not dead"
-    ]
-  }
+    }
+  },
+  "rules": {},
+  "globals": {
+    "google": "readonly"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
 }
