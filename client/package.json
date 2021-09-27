@@ -1,9 +1,6 @@
 {
   "name": "client",
   "version": "0.1.0",
-  "engines": {
-    "node": "14.x"
-  },
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -35,11 +32,11 @@
     ],
     "parserOptions": {
       "parser": "babel-eslint"
+    },
+    "rules": {},
+    "globals": {
+      "google": "readonly"
     }
-  },
-  "rules": {},
-  "globals": {
-    "google": "readonly"
   },
   "browserslist": [
     "> 1%",
