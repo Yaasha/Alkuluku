@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "gunicorn server.app:app",
-    "build": "cd client && npm run install & npm run build"
+    "build": "cd client && npm install & npm run build"
   },
   "dependencies": {
     "core-js": "^3.6.5",
