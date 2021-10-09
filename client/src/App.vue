@@ -1,16 +1,19 @@
 <template>
   <div id="app">
+    <Menu />
     <Map />
   </div>
 </template>
 
 <script>
 import Map from "./components/Map.vue";
+import Menu from "./components/Menu.vue";
 
 export default {
   name: "App",
   components: {
     Map,
+    Menu,
   },
 };
 </script>
