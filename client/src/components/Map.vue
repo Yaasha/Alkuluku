@@ -7,8 +7,7 @@ import * as am4core from "@amcharts/amcharts4/core";
 import * as am4maps from "@amcharts/amcharts4/maps";
 import am4geodata_worldLow from "@amcharts/amcharts4-geodata/worldLow";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
-import countries from "@amcharts/amcharts4-geodata/data/countries2";
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 
 export default {
   name: "Map",
@@ -18,10 +17,10 @@ export default {
     };
   },
   computed: {
-    ...mapState(["user", "settings", "mapData"]),
+    ...mapState(["user", "settings"]),
+    ...mapGetters(["mapData"]),
   },
   mounted() {
-    console.log("this.settings", this.settings);
     // Themes begin
     am4core.useTheme(am4themes_animated);
     // Themes end
@@ -48,7 +47,7 @@ export default {
 
     // Exclude Antartica
     this.polygonSeries.exclude = ["AQ"];
-    this.updateData();
+    this.polygonSeries.data = this.mapData;
 
     // Make map load polygon (like country names) data from GeoJSON
     this.polygonSeries.useGeodata = true;
@@ -64,21 +63,10 @@ export default {
     let hoverState = polygonTemplate.states.create("hover");
     hoverState.properties.fill = am4core.color(this.settings.hoverColor);
   },
-  methods: {
-    updateData() {
-      let mapData = Object.keys(countries).map((countryId) => {
-        return {
-          id: countryId,
-          value: this.mapData[countryId]?.value || 0,
-        };
-      });
-      this.polygonSeries.data = mapData;
-    },
-  },
   watch: {
     mapData: {
       handler() {
-        this.updateData();
+        this.polygonSeries.data = this.mapData;
       },
       deep: true,
     },

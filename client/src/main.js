@@ -1,16 +1,16 @@
 import Vue from "vue";
 import App from "./App.vue";
-import Vuesax from "vuesax";
-import "vuesax/dist/vuesax.css";
-import vuetify from "@/plugins/vuetify"; // path to vuetify export
+import vuetify from "@/plugins/vuetify";
+import "@/plugins/vuesax";
 import store from "@/store";
 
 Vue.config.productionTip = false;
-
-Vue.use(Vuesax, {});
 
 new Vue({
   vuetify,
   store,
   render: (h) => h(App),
+  mounted() {
+    this.$vs.setTheme("dark");
+  },
 }).$mount("#app");

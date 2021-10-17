@@ -7,9 +7,7 @@
       transition="slide-y-transition"
     >
       <template v-slot:activator>
-        <vs-button circle icon floating color="success">
-          <i class="bx bx-plus"></i>
-        </vs-button>
+        <book-dialog />
       </template>
       <vs-button circle icon floating>
         <i class="bx bx-cog"></i>
@@ -21,7 +19,13 @@
   </div>
 </template>
 <script>
-export default {};
+import BookDialog from "@/components/BookDialog.vue";
+
+export default {
+  components: {
+    BookDialog,
+  },
+};
 </script>
 <style scoped>
 #menu {
