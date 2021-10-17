@@ -1,8 +1,5 @@
 <template>
-  <div
-    id="map"
-    :style="{ backgroundColor: userData.settings.backgroundColor }"
-  />
+  <div id="map" :style="{ backgroundColor: settings.backgroundColor }" />
 </template>
 
 <script>
@@ -11,41 +8,20 @@ import * as am4maps from "@amcharts/amcharts4/maps";
 import am4geodata_worldLow from "@amcharts/amcharts4-geodata/worldLow";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 import countries from "@amcharts/amcharts4-geodata/data/countries2";
+import { mapState } from "vuex";
 
 export default {
   name: "Map",
   data() {
     return {
       polygonSeries: null,
-      userData: {
-        email: "",
-        name: "",
-        id: null,
-        settings: {
-          backgroundColor: "#30303c",
-          strokeColor: "#2f2f30",
-          minColor: "#39393b",
-          maxColor: "#5c9dbd",
-          hoverColor: "#5d7fbc",
-        },
-        mapData: {
-          CZ: {
-            id: "CZ",
-            value: 150,
-          },
-          RU: {
-            id: "RU",
-            value: 21,
-          },
-          DE: {
-            id: "DE",
-            value: 5,
-          },
-        },
-      },
     };
   },
+  computed: {
+    ...mapState(["user", "settings", "mapData"]),
+  },
   mounted() {
+    console.log("this.settings", this.settings);
     // Themes begin
     am4core.useTheme(am4themes_animated);
     // Themes end
@@ -66,8 +42,8 @@ export default {
     this.polygonSeries.heatRules.push({
       property: "fill",
       target: this.polygonSeries.mapPolygons.template,
-      min: am4core.color(this.userData.settings.minColor),
-      max: am4core.color(this.userData.settings.maxColor),
+      min: am4core.color(this.settings.minColor),
+      max: am4core.color(this.settings.maxColor),
     });
 
     // Exclude Antartica
@@ -82,27 +58,25 @@ export default {
     polygonTemplate.tooltipText = "{name}: {value}";
     polygonTemplate.nonScalingStroke = true;
     polygonTemplate.strokeWidth = 1;
-    polygonTemplate.stroke = am4core.color(this.userData.settings.strokeColor);
+    polygonTemplate.stroke = am4core.color(this.settings.strokeColor);
 
     // Create hover state and set alternative fill color
     let hoverState = polygonTemplate.states.create("hover");
-    hoverState.properties.fill = am4core.color(
-      this.userData.settings.hoverColor
-    );
+    hoverState.properties.fill = am4core.color(this.settings.hoverColor);
   },
   methods: {
     updateData() {
       let mapData = Object.keys(countries).map((countryId) => {
         return {
           id: countryId,
-          value: this.userData.mapData[countryId]?.value || 0,
+          value: this.mapData[countryId]?.value || 0,
         };
       });
       this.polygonSeries.data = mapData;
     },
   },
   watch: {
-    "userData.mapData": {
+    mapData: {
       handler() {
         this.updateData();
       },
