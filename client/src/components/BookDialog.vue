@@ -1,16 +1,30 @@
 <template>
   <div class="center">
     <vs-button @click="active = !active" circle icon floating color="success">
-      <i class="bx bx-plus"></i>
+      <i class="bx bx-book"></i>
     </vs-button>
-    <vs-dialog scroll overflow-hidden auto-width v-model="active">
+    <vs-dialog
+      scroll
+      overflow-hidden
+      auto-width
+      :loading="loading"
+      v-model="active"
+    >
       <template #header>
         <h3>Your books</h3>
       </template>
 
       <vs-table>
         <template #header>
-          <vs-input v-model="search" border placeholder="Search" />
+          <div class="d-flex table-header">
+            <vs-input
+              class="flex-grow-1"
+              v-model="search"
+              border
+              placeholder="Search"
+            />
+            <add-book-dialog class="my-auto pt-2" />
+          </div>
         </template>
         <template #thead>
           <vs-tr>
@@ -40,7 +54,7 @@
               {{ country.name }}
             </vs-td>
             <vs-td>
-              {{ country.lastAdded }}
+              {{ formatDate(country.lastAdded) }}
             </vs-td>
             <vs-td>
               {{ country.bookCount }}
@@ -48,16 +62,15 @@
 
             <template #expand>
               <vs-row
-                class="book-row"
-                w="12"
-                :key="book.name"
+                :key="book.id"
                 v-for="book in country.books"
+                class="book-row"
               >
                 <vs-col w="10" class="text-left my-auto">
                   <div class="book-title">{{ book.name }}</div>
                   <div class="book-subtitle">
                     <div>by {{ book.author }}</div>
-                    <div>(added on {{ book.addedOn }})</div>
+                    <div>(added on {{ formatDate(book.addedOn) }})</div>
                   </div>
                 </vs-col>
                 <vs-col w="2" class="book-action">
@@ -65,7 +78,12 @@
                     icon
                     color="danger"
                     border
-                    @click="deleteBook({ countryId: country.id, book })"
+                    @click="
+                      deleteBookClick({
+                        countryId: country.id,
+                        bookId: book.id,
+                      })
+                    "
                   >
                     <i class="bx bxs-trash"></i> </vs-button
                 ></vs-col>
@@ -79,10 +97,13 @@
 </template>
 <script>
 import { mapState, mapGetters, mapActions } from "vuex";
+import AddBookDialog from "@/components/AddBookDialog.vue";
 
 export default {
+  components: { AddBookDialog },
   data: () => ({
     active: false,
+    loading: false,
     search: "",
     items: [],
   }),
@@ -92,24 +113,35 @@ export default {
   },
   methods: {
     ...mapActions(["deleteBook"]),
+    deleteBookClick(payload) {
+      this.loading = true;
+      setTimeout(
+        () => this.deleteBook(payload).then(() => (this.active = false)),
+        0
+      );
+    },
+    formatDate(date) {
+      if (!date) return null;
+
+      const [year, month, day] = date.split("-");
+      return `${day}/${month}/${year}`;
+    },
   },
   watch: {
     bookData: {
       handler() {
-        this.$set(this, "items", []);
-        for (let country of this.bookData) {
-          this.items.push(country);
-        }
+        this.$set(this, "items", this.bookData);
       },
       immediate: true,
+      deep: true,
+    },
+    active() {
+      this.loading = false;
     },
   },
 };
 </script>
 <style lang="scss">
-.text-left {
-  text-align: left;
-}
 .book-row {
   padding: 10px;
   border-radius: var(--vs-radius);
@@ -132,8 +164,8 @@ export default {
   display: flex !important;
   justify-content: end !important;
 }
-.my-auto {
-  margin-top: auto;
-  margin-bottom: auto;
+.table-header {
+  margin-top: -5px;
+  margin-bottom: -5px;
 }
 </style>

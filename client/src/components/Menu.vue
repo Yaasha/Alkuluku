@@ -1,7 +1,6 @@
 <template>
   <div id="menu">
     <v-speed-dial
-      v-model="fab"
       direction="bottom"
       open-on-hover
       transition="slide-y-transition"
