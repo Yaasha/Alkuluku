@@ -16,19 +16,41 @@
       </template>
 
       <div class="con-form">
-        <vs-input v-model="data.name" placeholder="Name">
+        <vs-input
+          v-model="data.name"
+          placeholder="Name"
+          @blur="validateField('name')"
+        >
           <template #icon>
             <i class="bx bxs-book"></i>
           </template>
+          <template #message-danger>
+            <div class="text-left">{{ errors.name }}</div>
+          </template>
         </vs-input>
-        <vs-input v-model="data.author" placeholder="Author">
+        <vs-input
+          v-model="data.author"
+          placeholder="Author"
+          @blur="validateField('author')"
+        >
           <template #icon>
             <i class="bx bxs-user"></i>
           </template>
+          <template #message-danger>
+            <div class="text-left">{{ errors.author }}</div>
+          </template>
         </vs-input>
-        <vs-select filter placeholder="Country" v-model="data.country">
+        <vs-select
+          filter
+          placeholder="Country"
+          v-model="data.country"
+          @blur="validateField('country')"
+        >
           <template #icon>
             <i class="bx bx-world"></i>
+          </template>
+          <template #message-danger>
+            <div class="text-left">{{ errors.country }}</div>
           </template>
           <vs-option
             :key="country.id"
@@ -54,9 +76,13 @@
               readonly
               v-bind="attrs"
               v-on="on"
+              @change="validateField('addedOn')"
             >
               <template #icon>
                 <i class="bx bxs-calendar"></i>
+              </template>
+              <template #message-danger>
+                <div class="text-left">{{ errors.addedOn }}</div>
               </template>
             </vs-input>
           </template>
@@ -71,7 +97,9 @@
 
       <template #footer>
         <div class="footer-dialog">
-          <vs-button block @click="addBookClick(data)"> Add book </vs-button>
+          <vs-button :disabled="disabled" block @click="addBookClick(data)">
+            Add book
+          </vs-button>
         </div>
       </template>
     </vs-dialog>
@@ -90,6 +118,12 @@ export default {
       country: "",
       addedOn: "",
     },
+    errors: {
+      name: "",
+      author: "",
+      country: "",
+      addedOn: "",
+    },
     calendar: false,
   }),
   computed: {
@@ -97,21 +131,41 @@ export default {
     computedDateFormatted() {
       return this.formatDate(this.data.addedOn);
     },
+    disabled() {
+      return !!(
+        this.errors.name ||
+        this.errors.author ||
+        this.errors.country ||
+        this.errors.addedOn
+      );
+    },
   },
   methods: {
     ...mapActions(["addBook"]),
     addBookClick(payload) {
-      this.loading = true;
-      setTimeout(
-        () => this.addBook(payload).then(() => (this.active = false)),
-        0
-      );
+      if (
+        this.validateField("name") &&
+        this.validateField("author") &&
+        this.validateField("country") &&
+        this.validateField("addedOn")
+      ) {
+        this.loading = true;
+        setTimeout(
+          () => this.addBook(payload).then(() => (this.active = false)),
+          0
+        );
+      }
     },
     reset() {
       this.data.name = "";
       this.data.author = "";
       this.data.country = "";
       this.data.addedOn = this.currentDate();
+
+      this.errors.name = "";
+      this.errors.author = "";
+      this.errors.country = "";
+      this.errors.addedOn = "";
     },
     currentDate() {
       const date = new Date();
@@ -122,6 +176,15 @@ export default {
 
       const [year, month, day] = date.split("-");
       return `${day}/${month}/${year}`;
+    },
+    validateField(field) {
+      if (this.data[field] === "") {
+        this.errors[field] = "Field cannot be empty";
+        return false;
+      } else {
+        this.errors[field] = "";
+        return true;
+      }
     },
   },
   watch: {
@@ -159,9 +222,9 @@ export default {
 .con-form .vs-checkbox-label {
   font-size: 0.8rem;
 }
-.con-form .vs-input-content,
+.con-form .vs-input-parent,
 .con-form .vs-select-content {
-  margin: 10px 0px;
+  margin: 15px 0px;
   width: calc(100%);
   min-width: 100%;
 }
