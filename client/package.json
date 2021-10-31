@@ -13,6 +13,7 @@
     "@amcharts/amcharts4-geodata": "^4.1.22",
     "core-js": "^3.6.5",
     "vue": "^2.6.11",
+    "vue-i18n": "^8.26.5",
     "vue-the-mask": "^0.11.1",
     "vuesax": "^4.0.1-alpha.25",
     "vuetify": "^2.5.9",

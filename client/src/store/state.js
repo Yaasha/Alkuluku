@@ -11,7 +11,9 @@ export default {
     maxColor: "#5c9dbd",
     hoverColor: "#5d7fbc",
     theme: "dark",
+    locale: "en-GB",
   },
+  countries: {},
   countryData: {
     CZ: {
       id: "CZ",

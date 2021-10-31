@@ -11,7 +11,7 @@
       v-model="active"
     >
       <template #header>
-        <h3>Your books</h3>
+        <h3>{{ $t("yourBooks") }}</h3>
       </template>
 
       <vs-table>
@@ -21,7 +21,7 @@
               class="flex-grow-1"
               v-model="search"
               border
-              placeholder="Search"
+              :placeholder="$t('search')"
             />
             <add-book-dialog class="my-auto pt-2" />
           </div>
@@ -29,19 +29,19 @@
         <template #thead>
           <vs-tr>
             <vs-th sort @click="items = $vs.sortData($event, items, 'name')">
-              Country
+              {{ $t("country") }}
             </vs-th>
             <vs-th
               sort
               @click="items = $vs.sortData($event, items, 'lastAdded')"
             >
-              Last added
+              {{ $t("lastAdded") }}
             </vs-th>
             <vs-th
               sort
               @click="items = $vs.sortData($event, items, 'bookCount')"
             >
-              Books
+              {{ $t("bookCount") }}
             </vs-th>
           </vs-tr>
         </template>
@@ -70,7 +70,9 @@
                   <div class="book-title">{{ book.name }}</div>
                   <div class="book-subtitle">
                     <div>by {{ book.author }}</div>
-                    <div>(added on {{ formatDate(book.addedOn) }})</div>
+                    <div>
+                      {{ $t("addedOnItem") }} {{ formatDate(book.addedOn) }}
+                    </div>
                   </div>
                 </vs-col>
                 <vs-col w="2" class="book-action">
@@ -122,9 +124,9 @@ export default {
     },
     formatDate(date) {
       if (!date) return null;
-
-      const [year, month, day] = date.split("-");
-      return `${day}/${month}/${year}`;
+      return new Date(Date.parse(date)).toLocaleDateString(
+        this.settings.locale
+      );
     },
   },
   watch: {

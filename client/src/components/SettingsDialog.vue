@@ -8,7 +8,7 @@
       v-model="active"
     >
       <template #header>
-        <h3>Settings</h3>
+        <h3>{{ $t("settings") }}</h3>
       </template>
 
       <div class="center grid">
@@ -18,9 +18,9 @@
             vs-type="flex"
             vs-justify="center"
             vs-align="center"
-            w="4"
+            w="3"
           >
-            <span>Background color</span>
+            <span>{{ $t("backgroundColor") }}</span>
             <color-picker v-model="localSettings.backgroundColor" />
           </vs-col>
           <vs-col
@@ -28,9 +28,9 @@
             vs-type="flex"
             vs-justify="center"
             vs-align="center"
-            w="4"
+            w="3"
           >
-            <span>Min color</span>
+            <span>{{ $t("minColor") }}</span>
             <color-picker v-model="localSettings.minColor" />
           </vs-col>
           <vs-col
@@ -38,9 +38,9 @@
             vs-type="flex"
             vs-justify="center"
             vs-align="center"
-            w="4"
+            w="3"
           >
-            <span>Max color</span>
+            <span>{{ $t("maxColor") }}</span>
             <color-picker v-model="localSettings.maxColor" />
           </vs-col>
           <vs-col
@@ -48,9 +48,9 @@
             vs-type="flex"
             vs-justify="center"
             vs-align="center"
-            w="4"
+            w="3"
           >
-            <span>Stroke color</span>
+            <span>{{ $t("strokeColor") }}</span>
             <color-picker v-model="localSettings.strokeColor" />
           </vs-col>
           <vs-col
@@ -58,26 +58,44 @@
             vs-type="flex"
             vs-justify="center"
             vs-align="center"
-            w="4"
+            w="3"
           >
-            <span>Hover color</span>
+            <span>{{ $t("hoverColor") }}</span>
             <color-picker v-model="localSettings.hoverColor" />
           </vs-col>
           <vs-col
-            class="pa-2"
+            class="pa-2 my-auto"
             vs-type="flex"
             vs-justify="center"
             vs-align="center"
-            w="4"
+            w="3"
           >
-            <span>UI theme</span>
-            <vs-select block placeholder="Theme" v-model="localSettings.theme">
+            <span>{{ $t("uiTheme") }}</span>
+            <vs-select block v-model="localSettings.theme">
               <vs-option
                 v-for="theme in themes"
                 :key="theme.value"
                 :label="theme.name"
                 :value="theme.value"
                 >{{ theme.name }}</vs-option
+              >
+            </vs-select>
+          </vs-col>
+          <vs-col
+            class="pa-2 my-auto"
+            vs-type="flex"
+            vs-justify="center"
+            vs-align="center"
+            w="3"
+          >
+            <span>{{ $t("language") }}</span>
+            <vs-select block v-model="localSettings.locale">
+              <vs-option
+                v-for="lang in languages"
+                :key="lang.value"
+                :label="lang.name"
+                :value="lang.value"
+                >{{ lang.name }}</vs-option
               >
             </vs-select>
           </vs-col>
@@ -93,7 +111,7 @@
             w="4"
           >
             <vs-button block color="warn" @click="reset()">
-              Reset to default
+              {{ $t("resetToDefault") }}
             </vs-button>
           </vs-col>
           <vs-col
@@ -103,7 +121,9 @@
             vs-align="center"
             w="4"
           >
-            <vs-button block color="dark" @click="cancel()"> Cancel </vs-button>
+            <vs-button block color="dark" @click="cancel()">
+              {{ $t("cancel") }}
+            </vs-button>
           </vs-col>
           <vs-col
             class="px-2"
@@ -112,7 +132,9 @@
             vs-align="center"
             w="4"
           >
-            <vs-button block color="success" @click="save()"> Save </vs-button>
+            <vs-button block color="success" @click="save()">
+              {{ $t("save") }}
+            </vs-button>
           </vs-col>
         </vs-row>
       </template>
@@ -128,23 +150,34 @@ export default {
   components: {
     ColorPicker,
   },
-  data: () => ({
-    active: false,
-    loading: false,
-    search: "",
-    items: [],
-    localSettings: {},
-    themes: [
-      { name: "Dark", value: "dark" },
-      { name: "Light", value: "light" },
-    ],
-  }),
+  data() {
+    return {
+      active: false,
+      loading: false,
+      search: "",
+      items: [],
+      localSettings: {},
+    };
+  },
   mounted() {
     this.localSettings = JSON.parse(JSON.stringify(this.settings));
   },
   computed: {
     ...mapState(["user", "settings"]),
     ...mapGetters(["bookData"]),
+    themes() {
+      return [
+        { name: this.$t("dark"), value: "dark" },
+        { name: this.$t("light"), value: "light" },
+      ];
+    },
+    languages() {
+      return [
+        { name: this.$t("englishUS"), value: "en-US" },
+        { name: this.$t("englishUK"), value: "en-GB" },
+        { name: this.$t("czech"), value: "cs-CZ" },
+      ];
+    },
   },
   methods: {
     ...mapActions(["setSettings"]),

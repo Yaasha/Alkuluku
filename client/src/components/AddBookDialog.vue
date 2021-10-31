@@ -12,13 +12,13 @@
     </vs-button>
     <vs-dialog :loading="loading" v-model="active">
       <template #header>
-        <h4 class="not-margin">Add new book</h4>
+        <h4 class="not-margin">{{ $t("addNewBook") }}</h4>
       </template>
 
       <div class="con-form">
         <vs-input
           v-model="data.name"
-          placeholder="Name"
+          :placeholder="$t('name')"
           @blur="validateField('name')"
         >
           <template #icon>
@@ -30,7 +30,7 @@
         </vs-input>
         <vs-input
           v-model="data.author"
-          placeholder="Author"
+          :placeholder="$t('author')"
           @blur="validateField('author')"
         >
           <template #icon>
@@ -42,7 +42,7 @@
         </vs-input>
         <vs-select
           filter
-          placeholder="Country"
+          :placeholder="$t('country')"
           v-model="data.country"
           @blur="validateField('country')"
         >
@@ -72,7 +72,7 @@
           <template v-slot:activator="{ on, attrs }">
             <vs-input
               v-model="computedDateFormatted"
-              placeholder="Added on"
+              :placeholder="$t('addedOn')"
               readonly
               v-bind="attrs"
               v-on="on"
@@ -98,7 +98,7 @@
       <template #footer>
         <div class="footer-dialog">
           <vs-button :disabled="disabled" block @click="addBookClick(data)">
-            Add book
+            {{ $t("addBook") }}
           </vs-button>
         </div>
       </template>
@@ -106,7 +106,7 @@
   </div>
 </template>
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions, mapState } from "vuex";
 
 export default {
   data: () => ({
@@ -127,6 +127,7 @@ export default {
     calendar: false,
   }),
   computed: {
+    ...mapState(["settings"]),
     ...mapGetters(["countries"]),
     computedDateFormatted() {
       return this.formatDate(this.data.addedOn);
@@ -173,13 +174,13 @@ export default {
     },
     formatDate(date) {
       if (!date) return null;
-
-      const [year, month, day] = date.split("-");
-      return `${day}/${month}/${year}`;
+      return new Date(Date.parse(date)).toLocaleDateString(
+        this.settings.locale
+      );
     },
     validateField(field) {
       if (this.data[field] === "") {
-        this.errors[field] = "Field cannot be empty";
+        this.errors[field] = this.$t("fieldCannotBeEmpty");
         return false;
       } else {
         this.errors[field] = "";

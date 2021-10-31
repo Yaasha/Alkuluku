@@ -18,7 +18,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["user", "settings"]),
+    ...mapState(["settings"]),
     ...mapGetters(["mapData"]),
   },
   methods: {

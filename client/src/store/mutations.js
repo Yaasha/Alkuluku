@@ -43,4 +43,7 @@ export default {
   setSettings: (state, payload) => {
     state.settings = JSON.parse(JSON.stringify(payload));
   },
+  setCountries: (state, payload) => {
+    state.countries = payload;
+  },
 };
