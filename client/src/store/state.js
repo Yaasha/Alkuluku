@@ -1,7 +1,6 @@
 export default {
   user: {
     email: "",
-    name: "",
     id: null,
   },
   settings: {
