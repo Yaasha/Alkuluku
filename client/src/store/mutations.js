@@ -40,4 +40,7 @@ export default {
       addedOn: payload.addedOn,
     });
   },
+  setSettings: (state, payload) => {
+    state.settings = JSON.parse(JSON.stringify(payload));
+  },
 };

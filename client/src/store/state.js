@@ -10,6 +10,7 @@ export default {
     minColor: "#39393b",
     maxColor: "#5c9dbd",
     hoverColor: "#5d7fbc",
+    theme: "dark",
   },
   countryData: {
     CZ: {

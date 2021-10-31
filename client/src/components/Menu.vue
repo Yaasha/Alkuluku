@@ -8,21 +8,29 @@
       <template v-slot:activator>
         <book-dialog />
       </template>
-      <vs-button circle icon floating>
+      <vs-button @click="settings = !settings" circle icon floating>
         <i class="bx bx-cog"></i>
       </vs-button>
       <vs-button circle icon floating color="danger">
         <i class="bx bx-log-out-circle"></i>
       </vs-button>
     </v-speed-dial>
+    <settings-dialog v-model="settings" />
   </div>
 </template>
 <script>
 import BookDialog from "@/components/BookDialog.vue";
+import SettingsDialog from "@/components/SettingsDialog.vue";
 
 export default {
   components: {
     BookDialog,
+    SettingsDialog,
+  },
+  data() {
+    return {
+      settings: false,
+    };
   },
 };
 </script>

@@ -1,5 +1,14 @@
 import Vue from "vue";
-import Vuetify, { VSpeedDial, VApp, VMenu, VDatePicker } from "vuetify/lib";
+import Vuetify, {
+  VSpeedDial,
+  VApp,
+  VMenu,
+  VDatePicker,
+  VColorPicker,
+  VTextField,
+  VCard,
+  VCardText,
+} from "vuetify/lib";
 import "vuetify/dist/vuetify.min.css";
 
 Vue.use(Vuetify, {
@@ -8,6 +17,10 @@ Vue.use(Vuetify, {
     VApp,
     VMenu,
     VDatePicker,
+    VColorPicker,
+    VTextField,
+    VCard,
+    VCardText,
   },
 });
 
