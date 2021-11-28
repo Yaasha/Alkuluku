@@ -8,12 +8,19 @@
 <script>
 import Map from "./components/Map.vue";
 import Menu from "./components/Menu.vue";
+import { mapActions } from "vuex";
 
 export default {
   name: "App",
   components: {
     Map,
     Menu,
+  },
+  methods: {
+    ...mapActions(["getUserData"]),
+  },
+  created() {
+    this.getUserData().catch(() => {});
   },
 };
 </script>

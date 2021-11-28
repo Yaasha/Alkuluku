@@ -29,13 +29,15 @@ new Vue({
     },
     "settings.locale": {
       async handler(val) {
-        let lang = val.split("-")[0];
-        this.$i18n.locale = lang;
+        if (val) {
+          let lang = val.split("-")[0];
+          this.$i18n.locale = lang;
 
-        const countries = await import(
-          `@amcharts/amcharts4-geodata/lang/${lang.toUpperCase()}`
-        );
-        this.setCountries(countries.default);
+          const countries = await import(
+            `@amcharts/amcharts4-geodata/lang/${lang.toUpperCase()}`
+          );
+          this.setCountries(countries.default);
+        }
       },
       immediate: true,
     },

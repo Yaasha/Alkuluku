@@ -46,4 +46,10 @@ export default {
   setCountries: (state, payload) => {
     state.countries = payload;
   },
+  setUserData: (state, payload) => {
+    state.user.email = payload.email;
+  },
+  setCountryData: (state, payload) => {
+    state.countryData = payload;
+  },
 };
