@@ -13,9 +13,9 @@ def create_app():
     app = Flask(__name__, static_folder="../client/dist/", static_url_path="/")
     csp = {
         'default-src': '\'self\'',
-        'style-src': ['unpkg.com', 'cdn.jsdelivr.net']
+        'style-src': '*'
     }
-    Talisman(app, content_security_policy=csp, content_security_policy_nonce_in=['style-src'])
+    Talisman(app, content_security_policy=csp)
     app.config.from_object(Config)
     app.register_blueprint(routes)
     db.init_app(app)
