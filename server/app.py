@@ -15,7 +15,7 @@ def create_app():
         'default-src': '\'self\'',
         'style-src': ['unpkg.com', 'cdn.jsdelivr.net']
     }
-    Talisman(app, content_security_policy=csp)
+    Talisman(app, content_security_policy=csp, content_security_policy_nonce_in=['style-src'])
     app.config.from_object(Config)
     app.register_blueprint(routes)
     db.init_app(app)
