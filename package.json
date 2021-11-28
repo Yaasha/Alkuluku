@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "gunicorn server.app:app",
+    "start": "cd server && gunicorn app:app",
     "build": "cd client && npm run build",
     "postinstall": "cd client && npm install"
   },

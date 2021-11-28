@@ -140,3 +140,8 @@ def logout():
     response = jsonify(message="User successfully logged out")
     unset_jwt_cookies(response)
     return response, 200
+
+
+@routes.route('/favicon.ico')
+def favicon():
+    return current_app.send_static_file('favicon.ico')
