@@ -39,4 +39,10 @@ export default {
   fieldMustBeEmail: "Value must be a valid email address",
   passwordMinLength: "Password must be at least 8 characters long",
   passwordsDontMatch: "Passwords must match",
+  bookAdded: "Book added successfully",
+  bookRemoved: "Book removed successfully",
+  settingsUpdated: "Settings updated successfully",
+  loggedIn: "You are now logged in",
+  loginFailed: "Login attempt failed",
+  registerFailed: "Account creation failed",
 };

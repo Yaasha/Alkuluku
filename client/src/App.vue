@@ -62,5 +62,24 @@ html {
 }
 html {
   overflow: hidden !important;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+}
+.toasted.bubble {
+  border-radius: 0 12px 12px 0 !important;
+  font-size: 0.9rem !important;
+  -webkit-transition: height 0.25s ease !important;
+  transition: height 0.25s ease !important;
+  border-radius: 12px !important;
+  z-index: 999 !important;
+}
+.toasted.bubble.success {
+  background: #45c83a !important;
+  -webkit-box-shadow: 6px 6px 0 0 rgba(69, 200, 58, 0.3) !important;
+  box-shadow: 6px 6px 0 0 rgba(69, 200, 58, 0.3) !important;
+}
+.toasted.bubble.error {
+  background: #ff4658 !important;
+  -webkit-box-shadow: 6px 6px 0 0 rgba(255, 70, 88, 0.3) !important;
+  box-shadow: 6px 6px 0 0 rgba(255, 70, 88, 0.3) !important;
 }
 </style>

@@ -3,6 +3,7 @@ import App from "./App.vue";
 import vuetify from "@/plugins/vuetify";
 import "@/plugins/vuesax";
 import "@/plugins/vStyle";
+import "@/plugins/vueToasted";
 import store from "@/store";
 import { mapState, mapMutations } from "vuex";
 import i18n from "@/i18n";

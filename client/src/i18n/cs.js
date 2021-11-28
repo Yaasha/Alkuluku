@@ -39,4 +39,10 @@ export default {
   fieldMustBeEmail: "Hodnota musí být platná emailová adresa",
   passwordMinLength: "Heslo musí mít alespoň 8 znaků",
   passwordsDontMatch: "Hesla musí bý stejná",
+  bookAdded: "Kniha úspěšně přidána",
+  bookRemoved: "Kniha úspěšně odebrána",
+  settingsUpdated: "Nastavení úspěšně uloženo",
+  loggedIn: "Přihlášení proběhlo úspěšně",
+  loginFailed: "Přihlášení selhalo",
+  registerFailed: "Vytvoření účtu selhalo",
 };
