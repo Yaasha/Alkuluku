@@ -2,13 +2,16 @@
   <v-app id="app">
     <Menu />
     <Map />
+    <v-style>
+      {{ scrollBarStyle }}
+    </v-style>
   </v-app>
 </template>
 
 <script>
 import Map from "./components/Map.vue";
 import Menu from "./components/Menu.vue";
-import { mapActions } from "vuex";
+import { mapActions, mapState } from "vuex";
 
 export default {
   name: "App",
@@ -20,7 +23,24 @@ export default {
     ...mapActions(["getUserData"]),
   },
   created() {
+    console.log("this.$vs", this.$vs);
     this.getUserData().catch(() => {});
+  },
+  computed: {
+    ...mapState(["settings"]),
+    scrollBarStyle() {
+      return `
+        ::-webkit-scrollbar {
+          width: 5px;
+          height: 5px;
+          display: block;
+          background: ${this.settings.theme === "dark" ? "#1f2024" : "#fff"};
+        }
+        ::-webkit-scrollbar-thumb {
+          background: ${this.settings.theme === "dark" ? "#fff" : "#1f2024"};
+          border-radius: 5px;
+        }`;
+    },
   },
 };
 </script>
@@ -40,5 +60,8 @@ html {
   width: 100%;
   height: 100%;
   margin: 0;
+}
+html {
+  overflow: hidden !important;
 }
 </style>

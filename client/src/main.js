@@ -2,6 +2,7 @@ import Vue from "vue";
 import App from "./App.vue";
 import vuetify from "@/plugins/vuetify";
 import "@/plugins/vuesax";
+import "@/plugins/vStyle";
 import store from "@/store";
 import { mapState, mapMutations } from "vuex";
 import i18n from "@/i18n";
@@ -33,10 +34,24 @@ new Vue({
           let lang = val.split("-")[0];
           this.$i18n.locale = lang;
 
-          const countries = await import(
+          const allCountries = await import(
+            `@amcharts/amcharts4-geodata/data/countries2`
+          );
+          const countryNames = await import(
             `@amcharts/amcharts4-geodata/lang/${lang.toUpperCase()}`
           );
-          this.setCountries(countries.default);
+          const countries = Object.keys(allCountries.default).map(
+            (countryId) => {
+              return [
+                countryId,
+                countryNames.default[countryId]
+                  ? countryNames.default[countryId]
+                  : allCountries.default[countryId].country,
+              ];
+            }
+          );
+
+          this.setCountries(Object.fromEntries(countries));
         }
       },
       immediate: true,

@@ -159,9 +159,6 @@ export default {
       localSettings: {},
     };
   },
-  mounted() {
-    this.localSettings = JSON.parse(JSON.stringify(this.settings));
-  },
   computed: {
     ...mapState(["user", "settings"]),
     ...mapGetters(["bookData"]),
@@ -204,18 +201,23 @@ export default {
           maxColor: "#5c9dbd",
           hoverColor: "#5d7fbc",
           theme: "dark",
+          locale: "en-GB",
         })
       );
       this.save();
     },
   },
   watch: {
-    active(val) {
-      this.loading = false;
-      this.$emit("input", val);
-    },
     value(val) {
       this.active = val;
+    },
+    active: {
+      handler(val) {
+        this.loading = false;
+        this.$emit("input", val);
+        this.localSettings = JSON.parse(JSON.stringify(this.settings));
+      },
+      immediate: true,
     },
   },
 };
