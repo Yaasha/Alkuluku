@@ -11,7 +11,11 @@ from flask_talisman import Talisman
 def create_app():
     # Setup Flask and load app.config
     app = Flask(__name__, static_folder="../client/dist/", static_url_path="/")
-    Talisman(app)
+    csp = {
+        'default-src': '\'self\'',
+        'style-src': ['unpkg.com', 'cdn.jsdelivr.net']
+    }
+    Talisman(app, content_security_policy=csp)
     app.config.from_object(Config)
     app.register_blueprint(routes)
     db.init_app(app)
