@@ -6,10 +6,12 @@ from flask_jwt_extended import JWTManager, create_access_token, set_access_cooki
 from flask_cors import CORS
 from datetime import datetime, timedelta, timezone
 from mongoengine.errors import DoesNotExist
+from flask_talisman import Talisman
 
 def create_app():
     # Setup Flask and load app.config
     app = Flask(__name__, static_folder="../client/dist/", static_url_path="/")
+    Talisman(app)
     app.config.from_object(Config)
     app.register_blueprint(routes)
     db.init_app(app)

@@ -23,7 +23,15 @@
               border
               :placeholder="$t('search')"
             />
-            <add-book-dialog class="my-auto pt-2" />
+            <vs-button
+              @click="$emit('addBook')"
+              circle
+              icon
+              floating
+              color="success"
+            >
+              <i class="bx bx-book-add"></i>
+            </vs-button>
           </div>
         </template>
         <template #thead>
@@ -99,10 +107,8 @@
 </template>
 <script>
 import { mapState, mapGetters, mapActions } from "vuex";
-import AddBookDialog from "@/components/AddBookDialog.vue";
 
 export default {
-  components: { AddBookDialog },
   data: () => ({
     active: false,
     loading: false,

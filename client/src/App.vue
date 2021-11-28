@@ -23,7 +23,6 @@ export default {
     ...mapActions(["getUserData"]),
   },
   created() {
-    console.log("this.$vs", this.$vs);
     this.getUserData().catch(() => {});
   },
   computed: {

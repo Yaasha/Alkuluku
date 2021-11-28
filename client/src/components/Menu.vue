@@ -7,8 +7,17 @@
       transition="slide-y-transition"
     >
       <template v-slot:activator>
-        <book-dialog />
+        <book-dialog @addBook="addBook = !addBook" />
       </template>
+      <vs-button
+        @click="addBook = !addBook"
+        circle
+        icon
+        floating
+        color="success"
+      >
+        <i class="bx bx-book-add"></i>
+      </vs-button>
       <vs-button @click="settings = !settings" circle icon floating>
         <i class="bx bx-cog"></i>
       </vs-button>
@@ -18,16 +27,19 @@
     </v-speed-dial>
     <login v-else></login>
     <settings-dialog v-model="settings" />
+    <add-book-dialog v-model="addBook" />
   </div>
 </template>
 <script>
 import BookDialog from "@/components/BookDialog.vue";
+import AddBookDialog from "@/components/AddBookDialog.vue";
 import SettingsDialog from "@/components/SettingsDialog.vue";
 import Login from "@/components/Login.vue";
 import { mapState, mapActions } from "vuex";
 
 export default {
   components: {
+    AddBookDialog,
     BookDialog,
     SettingsDialog,
     Login,
@@ -35,6 +47,7 @@ export default {
   data() {
     return {
       settings: false,
+      addBook: false,
     };
   },
   computed: {

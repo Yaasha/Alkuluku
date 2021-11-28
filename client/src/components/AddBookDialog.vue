@@ -1,15 +1,5 @@
 <template>
   <div class="center">
-    <vs-button
-      class="my-auto"
-      @click="active = !active"
-      color="success"
-      circle
-      icon
-      floating
-    >
-      <i class="bx bx-plus"></i>
-    </vs-button>
     <vs-dialog :loading="loading" v-model="active">
       <template #header>
         <h4 class="not-margin">{{ $t("addNewBook") }}</h4>
@@ -109,6 +99,7 @@
 import { mapGetters, mapActions, mapState } from "vuex";
 
 export default {
+  props: ["value"],
   data: () => ({
     active: false,
     loading: false,
@@ -189,10 +180,14 @@ export default {
     },
   },
   watch: {
+    value(val) {
+      this.active = val;
+    },
     active: {
-      handler() {
+      handler(val) {
         this.reset();
         this.loading = false;
+        this.$emit("input", val);
       },
       immediate: true,
     },
