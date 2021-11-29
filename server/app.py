@@ -13,7 +13,7 @@ def create_app():
     app = Flask(__name__, static_folder="../client/dist/", static_url_path="/")
     csp = {
         'default-src': ['\'self\''],
-        'style-src': ['unpkg.com', 'cdn.jsdelivr.net', '\'unsafe-inline\''],
+        'style-src': ['unpkg.com', 'cdn.jsdelivr.net', '\'self\'', '\'unsafe-inline\''],
     }
     Talisman(app, content_security_policy=csp)
     app.config.from_object(Config)
