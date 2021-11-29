@@ -14,6 +14,7 @@ def create_app():
     csp = {
         'default-src': ['\'self\''],
         'style-src': ['unpkg.com', 'cdn.jsdelivr.net', '\'self\'', '\'unsafe-inline\''],
+        'font-src': ['unpkg.com', 'cdn.jsdelivr.net', '\'self\''],
     }
     Talisman(app, content_security_policy=csp)
     app.config.from_object(Config)
