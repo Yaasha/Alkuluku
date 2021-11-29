@@ -22,7 +22,7 @@ def create_app():
     app.register_blueprint(routes)
     db.init_app(app)
     jwt = JWTManager(app)
-    CORS(app, supports_credentials=True)
+    CORS(app, supports_credentials=True, resources={r"/*": {"origins": "alkuluku.io"}})
     
     @jwt.user_identity_loader
     def user_identity_lookup(user):
