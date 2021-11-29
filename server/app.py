@@ -17,12 +17,12 @@ def create_app():
         'font-src': ['unpkg.com', 'cdn.jsdelivr.net', '\'self\''],
         'img-src': ['\'self\'', 'data:'],
     }
-    Talisman(app, content_security_policy=csp)
+    Talisman(app, content_security_policy=csp, force_https=False)
     app.config.from_object(Config)
     app.register_blueprint(routes)
     db.init_app(app)
     jwt = JWTManager(app)
-    CORS(app, supports_credentials=True, resources={r"/*": {"origins": "alkuluku.io"}})
+    CORS(app, supports_credentials=True)
     
     @jwt.user_identity_loader
     def user_identity_lookup(user):
