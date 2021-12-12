@@ -42,7 +42,10 @@
   "vue": {
     "pwa": {
       "themeColor": "#1f2024",
-      "msTileColor": "#141416"
+      "msTileColor": "#141416",
+      "manifestOptions": {
+        "display": "fullscreen"
+      }
     }
   },
   "eslintConfig": {
