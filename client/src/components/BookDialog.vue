@@ -1,8 +1,5 @@
 <template>
   <div class="center">
-    <vs-button @click="active = !active" circle icon floating color="success">
-      <i class="bx bx-book"></i>
-    </vs-button>
     <vs-dialog
       scroll
       overflow-hidden
@@ -109,6 +106,7 @@
 import { mapState, mapGetters, mapActions } from "vuex";
 
 export default {
+  props: ["value"],
   data: () => ({
     active: false,
     loading: false,
@@ -143,8 +141,12 @@ export default {
       immediate: true,
       deep: true,
     },
-    active() {
+    active(val) {
       this.loading = false;
+      this.$emit("input", val);
+    },
+    value(val) {
+      this.active = val;
     },
   },
 };

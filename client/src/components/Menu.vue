@@ -2,12 +2,21 @@
   <div id="menu">
     <v-speed-dial
       v-if="user.email"
+      v-model="speedDial"
       direction="bottom"
-      open-on-hover
       transition="slide-y-transition"
+      open-on-hover
     >
       <template v-slot:activator>
-        <book-dialog @addBook="addBook = !addBook" />
+        <vs-button
+          @click.stop="if (allowClick) bookDialog = !bookDialog;"
+          circle
+          icon
+          floating
+          color="success"
+        >
+          <i class="bx bx-book"></i>
+        </vs-button>
       </template>
       <vs-button
         @click="addBook = !addBook"
@@ -28,6 +37,7 @@
     <login v-else></login>
     <settings-dialog v-model="settings" />
     <add-book-dialog v-model="addBook" />
+    <book-dialog v-model="bookDialog" @addBook="addBook = !addBook" />
   </div>
 </template>
 <script>
@@ -48,6 +58,9 @@ export default {
     return {
       settings: false,
       addBook: false,
+      bookDialog: false,
+      speedDial: false,
+      allowClick: false,
     };
   },
   computed: {
@@ -55,6 +68,11 @@ export default {
   },
   methods: {
     ...mapActions(["logout"]),
+  },
+  watch: {
+    speedDial(val) {
+      setTimeout(() => (this.allowClick = val), 50);
+    },
   },
 };
 </script>

@@ -19,6 +19,8 @@
             vs-justify="center"
             vs-align="center"
             w="3"
+            sm="6"
+            xs="12"
           >
             <span>{{ $t("backgroundColor") }}</span>
             <color-picker v-model="localSettings.backgroundColor" />
@@ -29,6 +31,8 @@
             vs-justify="center"
             vs-align="center"
             w="3"
+            sm="6"
+            xs="12"
           >
             <span>{{ $t("minColor") }}</span>
             <color-picker v-model="localSettings.minColor" />
@@ -39,6 +43,8 @@
             vs-justify="center"
             vs-align="center"
             w="3"
+            sm="6"
+            xs="12"
           >
             <span>{{ $t("maxColor") }}</span>
             <color-picker v-model="localSettings.maxColor" />
@@ -49,6 +55,8 @@
             vs-justify="center"
             vs-align="center"
             w="3"
+            sm="6"
+            xs="12"
           >
             <span>{{ $t("strokeColor") }}</span>
             <color-picker v-model="localSettings.strokeColor" />
@@ -59,6 +67,8 @@
             vs-justify="center"
             vs-align="center"
             w="3"
+            sm="6"
+            xs="12"
           >
             <span>{{ $t("hoverColor") }}</span>
             <color-picker v-model="localSettings.hoverColor" />
@@ -69,6 +79,8 @@
             vs-justify="center"
             vs-align="center"
             w="3"
+            sm="6"
+            xs="12"
           >
             <span>{{ $t("uiTheme") }}</span>
             <vs-select block v-model="localSettings.theme">
@@ -87,6 +99,8 @@
             vs-justify="center"
             vs-align="center"
             w="3"
+            sm="6"
+            xs="12"
           >
             <span>{{ $t("language") }}</span>
             <vs-select block v-model="localSettings.locale">
@@ -109,6 +123,7 @@
             vs-justify="center"
             vs-align="center"
             w="4"
+            xs="12"
           >
             <vs-button block color="warn" @click="reset()">
               {{ $t("resetToDefault") }}
@@ -120,6 +135,7 @@
             vs-justify="center"
             vs-align="center"
             w="4"
+            xs="12"
           >
             <vs-button block color="dark" @click="cancel()">
               {{ $t("cancel") }}
@@ -131,6 +147,7 @@
             vs-justify="center"
             vs-align="center"
             w="4"
+            xs="12"
           >
             <vs-button block color="success" @click="save()">
               {{ $t("save") }}
