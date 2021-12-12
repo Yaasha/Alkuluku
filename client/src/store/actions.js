@@ -42,11 +42,16 @@ export default {
     });
   },
   getUserData: ({ commit, dispatch }) => {
-    return http.get("/user-data").then((res) => {
-      commit("setUserData", res.data.data);
-      dispatch("getSettings");
-      dispatch("getCountryData");
-    });
+    return http
+      .get("/user-data")
+      .then((res) => {
+        commit("setUserData", res.data.data);
+        dispatch("getSettings");
+        dispatch("getCountryData");
+      })
+      .catch(() => {
+        commit("setUserData", { email: null });
+      });
   },
   getSettings: ({ commit }) => {
     return http.get("/settings").then((res) => {
@@ -100,8 +105,9 @@ export default {
         });
       });
   },
-  logout: () => {
+  logout: ({ commit }) => {
     return http.post("/logout").then(() => {
+      commit("clearState");
       window.location.reload();
     });
   },
