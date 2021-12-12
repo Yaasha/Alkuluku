@@ -45,4 +45,7 @@ export default {
   loggedIn: "You are now logged in",
   loginFailed: "Login attempt failed",
   registerFailed: "Account creation failed",
+  removeBook: "Remove book",
+  logout: "Logout",
+  showBooks: "Show added books",
 };

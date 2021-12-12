@@ -1,6 +1,13 @@
 <template>
   <div class="center">
-    <vs-button @click="active = !active" circle icon floating color="success">
+    <vs-button
+      @click="active = !active"
+      circle
+      icon
+      floating
+      color="success"
+      :aria-label="$t('signIn')"
+    >
       <i class="bx bx-log-in-circle"></i>
     </vs-button>
     <vs-dialog :loading="loading" v-model="active">
@@ -50,9 +57,13 @@
 
       <template #footer>
         <div v-if="registerMode" class="footer-dialog">
-          <vs-button block @click="signUp" :disabled="signUpDisabled">{{
-            $t("signUp")
-          }}</vs-button>
+          <vs-button
+            block
+            @click="signUp"
+            :disabled="signUpDisabled"
+            :aria-label="$t('signUp')"
+            >{{ $t("signUp") }}</vs-button
+          >
 
           <div class="new">
             {{ $t("existingUser")
@@ -60,9 +71,13 @@
           </div>
         </div>
         <div v-else class="footer-dialog">
-          <vs-button block @click="signIn" :disabled="signInDisabled">{{
-            $t("signIn")
-          }}</vs-button>
+          <vs-button
+            block
+            @click="signIn"
+            :disabled="signInDisabled"
+            :aria-label="$t('signIn')"
+            >{{ $t("signIn") }}</vs-button
+          >
 
           <div class="new">
             {{ $t("newUser")

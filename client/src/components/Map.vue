@@ -8,7 +8,7 @@ import * as am4maps from "@amcharts/amcharts4/maps";
 import am4geodata_worldLow from "@amcharts/amcharts4-geodata/worldLow";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 import { mapState, mapGetters } from "vuex";
-const _ = require("lodash");
+const equal = require("fast-deep-equal");
 
 export default {
   name: "Map",
@@ -77,7 +77,7 @@ export default {
   watch: {
     mapData: {
       handler(newVal, oldVal) {
-        if (!_.isEqual(newVal, oldVal)) {
+        if (!equal(newVal, oldVal)) {
           this.polygonSeries.data = this.mapData;
         }
       },
@@ -85,7 +85,7 @@ export default {
     },
     settings: {
       handler(newVal, oldVal) {
-        if (!_.isEqual(newVal, oldVal)) {
+        if (!equal(newVal, oldVal)) {
           this.buildMap();
         }
       },

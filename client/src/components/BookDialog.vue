@@ -26,6 +26,7 @@
               icon
               floating
               color="success"
+              :aria-label="$t('addBook')"
             >
               <i class="bx bx-book-add"></i>
             </vs-button>
@@ -91,6 +92,7 @@
                         bookId: book.id,
                       })
                     "
+                    :aria-label="$t('removeBook')"
                   >
                     <i class="bx bxs-trash"></i> </vs-button
                 ></vs-col>

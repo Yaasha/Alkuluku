@@ -125,7 +125,12 @@
             w="4"
             xs="12"
           >
-            <vs-button block color="warn" @click="reset()">
+            <vs-button
+              block
+              color="warn"
+              @click="reset()"
+              :aria-label="$t('resetToDefault')"
+            >
               {{ $t("resetToDefault") }}
             </vs-button>
           </vs-col>
@@ -137,7 +142,12 @@
             w="4"
             xs="12"
           >
-            <vs-button block color="dark" @click="cancel()">
+            <vs-button
+              block
+              color="dark"
+              @click="cancel()"
+              :aria-label="$t('cancel')"
+            >
               {{ $t("cancel") }}
             </vs-button>
           </vs-col>
@@ -149,7 +159,12 @@
             w="4"
             xs="12"
           >
-            <vs-button block color="success" @click="save()">
+            <vs-button
+              block
+              color="success"
+              @click="save()"
+              :aria-label="$t('save')"
+            >
               {{ $t("save") }}
             </vs-button>
           </vs-col>

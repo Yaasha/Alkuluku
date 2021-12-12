@@ -87,7 +87,12 @@
 
       <template #footer>
         <div class="footer-dialog">
-          <vs-button :disabled="disabled" block @click="addBookClick(data)">
+          <vs-button
+            :disabled="disabled"
+            block
+            @click="addBookClick(data)"
+            :aria-label="$t('addBook')"
+          >
             {{ $t("addBook") }}
           </vs-button>
         </div>

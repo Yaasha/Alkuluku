@@ -45,4 +45,7 @@ export default {
   loggedIn: "Přihlášení proběhlo úspěšně",
   loginFailed: "Přihlášení selhalo",
   registerFailed: "Vytvoření účtu selhalo",
+  removeBook: "Odebrat knihu",
+  logout: "Odhlásit",
+  showBooks: "Zobrazit přidané knihy",
 };

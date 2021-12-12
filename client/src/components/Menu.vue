@@ -19,6 +19,7 @@
           icon
           floating
           color="success"
+          :aria-label="$t('showBooks')"
         >
           <i class="bx bx-book"></i>
         </vs-button>
@@ -29,13 +30,27 @@
         icon
         floating
         color="success"
+        :aria-label="$t('addBook')"
       >
         <i class="bx bx-book-add"></i>
       </vs-button>
-      <vs-button @click="settings = !settings" circle icon floating>
+      <vs-button
+        @click="settings = !settings"
+        circle
+        icon
+        floating
+        :aria-label="$t('settings')"
+      >
         <i class="bx bx-cog"></i>
       </vs-button>
-      <vs-button @click="logout" circle icon floating color="danger">
+      <vs-button
+        @click="logout"
+        circle
+        icon
+        floating
+        color="danger"
+        :aria-label="$t('logout')"
+      >
         <i class="bx bx-log-out-circle"></i>
       </vs-button>
     </v-speed-dial>
