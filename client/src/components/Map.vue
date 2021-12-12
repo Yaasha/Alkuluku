@@ -9,6 +9,7 @@ import am4geodata_worldLow from "@amcharts/amcharts4-geodata/worldLow";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 import { mapState, mapGetters } from "vuex";
 const equal = require("fast-deep-equal");
+am4core.options.disableHoverOnTransform = "touch";
 
 export default {
   name: "Map",
