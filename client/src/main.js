@@ -8,6 +8,7 @@ import store from "@/store";
 import { mapState, mapMutations } from "vuex";
 import i18n from "@/i18n";
 import VueTheMask from "vue-the-mask";
+import './registerServiceWorker'
 
 Vue.config.productionTip = false;
 

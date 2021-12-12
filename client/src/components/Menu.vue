@@ -9,7 +9,12 @@
     >
       <template v-slot:activator>
         <vs-button
-          @click.stop="if (allowClick) bookDialog = !bookDialog;"
+          @click.stop="
+            if (allowClick) {
+              bookDialog = !bookDialog;
+              speedDial = false;
+            }
+          "
           circle
           icon
           floating

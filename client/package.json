@@ -13,6 +13,7 @@
     "@amcharts/amcharts4-geodata": "^4.1.22",
     "axios": "^0.24.0",
     "core-js": "^3.6.5",
+    "register-service-worker": "^1.7.1",
     "vue": "^2.6.11",
     "vue-i18n": "^8.26.5",
     "vue-the-mask": "^0.11.1",
@@ -24,6 +25,7 @@
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-plugin-pwa": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
     "babel-eslint": "^10.1.0",
     "deepmerge": "^4.2.2",
@@ -33,6 +35,12 @@
     "sass": "~1.32",
     "sass-loader": "^10",
     "vue-template-compiler": "^2.6.11"
+  },
+  "vue": {
+    "pwa": {
+      "themeColor": "#1f2024",
+      "msTileColor": "#141416"
+    }
   },
   "eslintConfig": {
     "root": true,
