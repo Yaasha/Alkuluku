@@ -16,6 +16,7 @@ def create_app():
         'style-src': ['unpkg.com', 'cdn.jsdelivr.net', '\'self\'', '\'unsafe-inline\''],
         'font-src': ['unpkg.com', 'cdn.jsdelivr.net', '\'self\''],
         'img-src': ['\'self\'', 'data:'],
+        'script-src-elem': ['\'self\'', 'storage.googleapis.com'],
     }
     Talisman(app, content_security_policy=csp, force_https=False)
     app.config.from_object(Config)
