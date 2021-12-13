@@ -7,6 +7,7 @@ from flask_cors import CORS
 from datetime import datetime, timedelta, timezone
 from mongoengine.errors import DoesNotExist
 from flask_talisman import Talisman
+from flask_compress import Compress
 
 def create_app():
     # Setup Flask and load app.config
@@ -19,6 +20,7 @@ def create_app():
         'script-src-elem': ['\'self\'', 'storage.googleapis.com'],
     }
     Talisman(app, content_security_policy=csp, force_https=False)
+    Compress(app)
     app.config.from_object(Config)
     app.register_blueprint(routes)
     db.init_app(app)

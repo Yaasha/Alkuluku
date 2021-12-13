@@ -9,15 +9,13 @@
 </template>
 
 <script>
-import Map from "./components/Map.vue";
-import Menu from "./components/Menu.vue";
 import { mapActions, mapState } from "vuex";
 
 export default {
   name: "App",
   components: {
-    Map,
-    Menu,
+    Map: () => import("@/components/Map.vue"),
+    Menu: () => import("@/components/Menu.vue"),
   },
   methods: {
     ...mapActions(["getUserData"]),

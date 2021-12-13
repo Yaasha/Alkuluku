@@ -175,12 +175,11 @@
 </template>
 <script>
 import { mapState, mapGetters, mapActions } from "vuex";
-import ColorPicker from "@/components/ColorPicker.vue";
 
 export default {
   props: ["value"],
   components: {
-    ColorPicker,
+    ColorPicker: () => import("@/components/ColorPicker.vue"),
   },
   data() {
     return {

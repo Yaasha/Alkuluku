@@ -37,10 +37,4 @@ module.exports = {
       },
     ],
   },
-  externals: function (context, request, callback) {
-    if (/xlsx|canvg|pdfmake/.test(request)) {
-      return callback(null, "commonjs " + request);
-    }
-    callback();
-  },
 };

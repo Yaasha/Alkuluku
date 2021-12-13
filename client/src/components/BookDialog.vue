@@ -174,7 +174,7 @@ export default {
 }
 .book-action {
   display: flex !important;
-  justify-content: end !important;
+  justify-content: flex-end !important;
 }
 .table-header {
   margin-top: -5px;

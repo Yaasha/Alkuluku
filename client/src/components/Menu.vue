@@ -61,18 +61,14 @@
   </div>
 </template>
 <script>
-import BookDialog from "@/components/BookDialog.vue";
-import AddBookDialog from "@/components/AddBookDialog.vue";
-import SettingsDialog from "@/components/SettingsDialog.vue";
-import Login from "@/components/Login.vue";
 import { mapState, mapActions } from "vuex";
 
 export default {
   components: {
-    AddBookDialog,
-    BookDialog,
-    SettingsDialog,
-    Login,
+    AddBookDialog: () => import("@/components/AddBookDialog.vue"),
+    BookDialog: () => import("@/components/BookDialog.vue"),
+    SettingsDialog: () => import("@/components/SettingsDialog.vue"),
+    Login: () => import("@/components/Login.vue"),
   },
   data() {
     return {

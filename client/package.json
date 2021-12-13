@@ -39,15 +39,6 @@
     "sass-loader": "^10",
     "vue-template-compiler": "^2.6.11"
   },
-  "vue": {
-    "pwa": {
-      "themeColor": "#1f2024",
-      "msTileColor": "#141416",
-      "manifestOptions": {
-        "display": "fullscreen"
-      }
-    }
-  },
   "eslintConfig": {
     "root": true,
     "env": {

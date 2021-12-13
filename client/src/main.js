@@ -31,29 +31,33 @@ new Vue({
       immediate: true,
     },
     "settings.locale": {
-      async handler(val) {
+      handler(val) {
         if (val) {
           let lang = val.split("-")[0];
           this.$i18n.locale = lang;
 
-          const allCountries = await import(
-            `@amcharts/amcharts4-geodata/data/countries2`
-          );
-          const countryNames = await import(
-            `@amcharts/amcharts4-geodata/lang/${lang.toUpperCase()}`
-          );
-          const countries = Object.keys(allCountries.default).map(
-            (countryId) => {
-              return [
-                countryId,
-                countryNames.default[countryId]
-                  ? countryNames.default[countryId]
-                  : allCountries.default[countryId].country,
-              ];
-            }
-          );
+          Promise.all([
+            import("@amcharts/amcharts4-geodata/data/countries2"),
+            import(`@amcharts/amcharts4-geodata/lang/${lang.toUpperCase()}.js`),
+          ])
+            .then((modules) => {
+              const allCountries = modules[0].default;
+              const countryNames = modules[1].default;
 
-          this.setCountries(Object.fromEntries(countries));
+              const countries = Object.keys(allCountries).map((countryId) => {
+                return [
+                  countryId,
+                  countryNames[countryId]
+                    ? countryNames[countryId]
+                    : allCountries[countryId].country,
+                ];
+              });
+
+              this.setCountries(Object.fromEntries(countries));
+            })
+            .catch((e) => {
+              console.error("Error when loading lang data", e);
+            });
         }
       },
       immediate: true,

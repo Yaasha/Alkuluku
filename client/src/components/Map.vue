@@ -3,13 +3,8 @@
 </template>
 
 <script>
-import * as am4core from "@amcharts/amcharts4/core";
-import * as am4maps from "@amcharts/amcharts4/maps";
-import am4geodata_worldLow from "@amcharts/amcharts4-geodata/worldLow";
-import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 import { mapState, mapGetters } from "vuex";
 const equal = require("fast-deep-equal");
-am4core.options.disableHoverOnTransform = "touch";
 
 export default {
   name: "Map",
@@ -25,51 +20,69 @@ export default {
   },
   methods: {
     buildMap() {
-      // Themes begin
-      am4core.useTheme(am4themes_animated);
-      // Themes end
+      Promise.all([
+        import("@amcharts/amcharts4/core"),
+        import("@amcharts/amcharts4/maps"),
+        import("@amcharts/amcharts4-geodata/worldLow"),
+        import("@amcharts/amcharts4/themes/animated"),
+      ])
+        .then((modules) => {
+          const am4core = modules[0];
+          const am4maps = modules[1];
+          const am4geodata_worldLow = modules[2].default;
+          const am4themes_animated = modules[3].default;
 
-      if (this.chart) this.chart.dispose();
+          am4core.options.disableHoverOnTransform = "touch";
 
-      // Create map instance
-      this.chart = am4core.create("map", am4maps.MapChart);
+          // Themes begin
+          am4core.useTheme(am4themes_animated);
+          // Themes end
 
-      // Set map definition
-      this.chart.geodata = am4geodata_worldLow;
+          if (this.chart) this.chart.dispose();
 
-      // Set projection
-      this.chart.projection = new am4maps.projections.Miller();
+          // Create map instance
+          this.chart = am4core.create("map", am4maps.MapChart);
 
-      // Create map polygon series
-      this.polygonSeries = this.chart.series.push(
-        new am4maps.MapPolygonSeries()
-      );
+          // Set map definition
+          this.chart.geodata = am4geodata_worldLow;
 
-      //Set min/max fill color for each area
-      this.polygonSeries.heatRules.push({
-        property: "fill",
-        target: this.polygonSeries.mapPolygons.template,
-        min: am4core.color(this.settings.minColor),
-        max: am4core.color(this.settings.maxColor),
-      });
+          // Set projection
+          this.chart.projection = new am4maps.projections.Miller();
 
-      // Exclude Antartica
-      this.polygonSeries.exclude = ["AQ"];
-      this.polygonSeries.data = this.mapData;
+          // Create map polygon series
+          this.polygonSeries = this.chart.series.push(
+            new am4maps.MapPolygonSeries()
+          );
 
-      // Make map load polygon (like country names) data from GeoJSON
-      this.polygonSeries.useGeodata = true;
+          //Set min/max fill color for each area
+          this.polygonSeries.heatRules.push({
+            property: "fill",
+            target: this.polygonSeries.mapPolygons.template,
+            min: am4core.color(this.settings.minColor),
+            max: am4core.color(this.settings.maxColor),
+          });
 
-      // Configure series tooltip
-      let polygonTemplate = this.polygonSeries.mapPolygons.template;
-      polygonTemplate.tooltipText = "{name}: {value}";
-      polygonTemplate.nonScalingStroke = true;
-      polygonTemplate.strokeWidth = 1;
-      polygonTemplate.stroke = am4core.color(this.settings.strokeColor);
+          // Exclude Antartica
+          this.polygonSeries.exclude = ["AQ"];
+          this.polygonSeries.data = this.mapData;
 
-      // Create hover state and set alternative fill color
-      let hoverState = polygonTemplate.states.create("hover");
-      hoverState.properties.fill = am4core.color(this.settings.hoverColor);
+          // Make map load polygon (like country names) data from GeoJSON
+          this.polygonSeries.useGeodata = true;
+
+          // Configure series tooltip
+          let polygonTemplate = this.polygonSeries.mapPolygons.template;
+          polygonTemplate.tooltipText = "{name}: {value}";
+          polygonTemplate.nonScalingStroke = true;
+          polygonTemplate.strokeWidth = 1;
+          polygonTemplate.stroke = am4core.color(this.settings.strokeColor);
+
+          // Create hover state and set alternative fill color
+          let hoverState = polygonTemplate.states.create("hover");
+          hoverState.properties.fill = am4core.color(this.settings.hoverColor);
+        })
+        .catch((e) => {
+          console.error("Error when creating chart", e);
+        });
     },
   },
   mounted() {
