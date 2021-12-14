@@ -38,17 +38,21 @@ new Vue({
 
           Promise.all([
             import("@amcharts/amcharts4-geodata/data/countries2"),
-            import(`@amcharts/amcharts4-geodata/lang/${lang.toUpperCase()}.js`),
+            import("@amcharts/amcharts4-geodata/lang/EN.js"),
+            import("@amcharts/amcharts4-geodata/lang/CS.js"),
           ])
             .then((modules) => {
               const allCountries = modules[0].default;
-              const countryNames = modules[1].default;
+              const countryNames = {
+                en: modules[1].default,
+                cs: modules[2].default,
+              };
 
               const countries = Object.keys(allCountries).map((countryId) => {
                 return [
                   countryId,
-                  countryNames[countryId]
-                    ? countryNames[countryId]
+                  countryNames[lang][countryId]
+                    ? countryNames[lang][countryId]
                     : allCountries[countryId].country,
                 ];
               });
