@@ -14,6 +14,5 @@ class Config(object):
         'host': os.environ.get("MONGODB_URI")
     }
     
-    JWT_TOKEN_LOCATION=['cookies']
-    JWT_COOKIE_CSRF_PROTECT = False
-    JWT_ACCESS_TOKEN_EXPIRES = timedelta(days=30)
+    JWT_TOKEN_LOCATION = ['cookies']
+    JWT_REFRESH_COOKIE_PATH = '/user-data'

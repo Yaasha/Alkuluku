@@ -29,7 +29,10 @@ def create_app():
     
     @jwt.user_identity_loader
     def user_identity_lookup(user):
-        return user.email
+        if type(user) == str:
+            return user
+        else:
+            return user.email
 
     @jwt.user_lookup_loader
     def user_lookup_callback(_jwt_header, jwt_data):

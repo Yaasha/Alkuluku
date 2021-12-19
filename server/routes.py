@@ -4,7 +4,7 @@ from database import User
 from forms import UserSchema, DataSchema
 from marshmallow import ValidationError
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_jwt_extended import create_access_token, set_access_cookies
+from flask_jwt_extended import create_access_token, set_access_cookies, set_refresh_cookies, create_refresh_token
 from flask_jwt_extended import unset_jwt_cookies, jwt_required
 from flask_jwt_extended import current_user
 
@@ -64,14 +64,17 @@ def country_data():
 
 
 @routes.route('/user-data', methods=['GET'])
-@jwt_required()
+@jwt_required(refresh=True)
 def user_data():
-    return jsonify({
+    access_token = create_access_token(identity=current_user)
+    response = jsonify({
         "status": "success",
         "data": {
             "email": current_user.email,
         },
     })
+    set_access_cookies(response, access_token)
+    return response
 
 
 @routes.route('/register', methods=['POST'])
@@ -101,9 +104,11 @@ def register():
 
             user.save()
             access_token = create_access_token(identity=user)
+            refresh_token = create_refresh_token(identity=user)
 
             response = jsonify(message="User successfully registered")
             set_access_cookies(response, access_token)
+            set_refresh_cookies(response, refresh_token)
 
             return response, 201
     except ValidationError as err:
@@ -122,9 +127,11 @@ def login():
             
             if check_password_hash(user.password, data['password']):
                 access_token = create_access_token(identity=user)
+                refresh_token = create_refresh_token(identity=user)
 
                 response = jsonify(message="User successfully logged in")
                 set_access_cookies(response, access_token)
+                set_refresh_cookies(response, refresh_token)
                 return response, 200
             else:
                 return jsonify(message="Unauthorized"), 401

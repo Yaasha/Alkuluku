@@ -19,24 +19,18 @@ export default {
     ...mapGetters(["mapData"]),
   },
   methods: {
-    buildMap() {
+    async buildMap() {
       Promise.all([
         import("@amcharts/amcharts4/core"),
         import("@amcharts/amcharts4/maps"),
         import("@amcharts/amcharts4-geodata/worldLow"),
-        import("@amcharts/amcharts4/themes/animated"),
       ])
         .then((modules) => {
           const am4core = modules[0];
           const am4maps = modules[1];
           const am4geodata_worldLow = modules[2].default;
-          const am4themes_animated = modules[3].default;
 
           am4core.options.disableHoverOnTransform = "touch";
-
-          // Themes begin
-          am4core.useTheme(am4themes_animated);
-          // Themes end
 
           if (this.chart) this.chart.dispose();
 
@@ -85,7 +79,7 @@ export default {
         });
     },
   },
-  mounted() {
+  async mounted() {
     this.buildMap();
   },
   watch: {
@@ -98,7 +92,7 @@ export default {
       deep: true,
     },
     settings: {
-      handler(newVal, oldVal) {
+      async handler(newVal, oldVal) {
         if (!equal(newVal, oldVal)) {
           this.buildMap();
         }
