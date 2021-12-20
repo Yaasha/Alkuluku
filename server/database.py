@@ -10,6 +10,7 @@ class User(db.Document):
     # User authentication information
     email = db.StringField()
     password = db.StringField()
+    last_password_change = db.DateTimeField()
 
     # User data
     settings = db.DictField()

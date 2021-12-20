@@ -48,4 +48,14 @@ export default {
   removeBook: "Odebrat knihu",
   logout: "Odhlásit",
   showBooks: "Zobrazit přidané knihy",
+  rememberMe: "Zůstat přihlášen",
+  forgotPassword: "Zapomenuté heslo?",
+  typeEmail: "Zadejte svůj email",
+  requestPasswordReset: "Obnovit heslo",
+  passwordResetRequested:
+    "Žádsot o obnovení hesla byla úspěšná, zkontrolujte svoji emailovou schránku",
+  passwordResetFailed: "Nedokázali jsme zpracovat vaši žádost o obnovení hesla",
+  typeNewPassword: "Zadejte svoje nové heslo",
+  resetPassword: "Resetovat heslo",
+  passwordResetSuccess: "Heslo úspěšně resetováno",
 };

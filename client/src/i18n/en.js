@@ -48,4 +48,14 @@ export default {
   removeBook: "Remove book",
   logout: "Logout",
   showBooks: "Show added books",
+  rememberMe: "Remember me",
+  forgotPassword: "Forgot password?",
+  typeEmail: "Type in your email to request a password reset",
+  requestPasswordReset: "Request password reset",
+  passwordResetRequested:
+    "Password reset requested, check your email to continue",
+  passwordResetFailed: "Could not process password reset",
+  typeNewPassword: "Type in your new password",
+  resetPassword: "Reset password",
+  passwordResetSuccess: "Password reset successful",
 };

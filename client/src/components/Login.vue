@@ -12,11 +12,22 @@
     </vs-button>
     <vs-dialog :loading="loading" v-model="active">
       <template #header>
-        <h4 class="not-margin" v-html="$t('welcome')"></h4>
+        <h4
+          v-if="mode === 'forgot'"
+          class="not-margin"
+          v-html="$t('typeEmail')"
+        ></h4>
+        <h4
+          v-else-if="mode === 'reset'"
+          class="not-margin"
+          v-html="$t('typeNewPassword')"
+        ></h4>
+        <h4 v-else class="not-margin" v-html="$t('welcome')"></h4>
       </template>
 
       <div class="con-form">
         <vs-input
+          v-if="mode !== 'reset'"
           v-model="data.email"
           :placeholder="$t('email')"
           @blur="validateField('email')"
@@ -27,6 +38,7 @@
           </template>
         </vs-input>
         <vs-input
+          v-if="mode !== 'forgot'"
           type="password"
           v-model="data.password"
           :placeholder="$t('password')"
@@ -40,7 +52,7 @@
           </template>
         </vs-input>
         <vs-input
-          v-if="registerMode"
+          v-if="mode === 'register' || mode === 'reset'"
           type="password"
           v-model="data.confirmPassword"
           :placeholder="$t('confirmPassword')"
@@ -53,10 +65,35 @@
             <div class="text-left">{{ errors.confirmPassword }}</div>
           </template>
         </vs-input>
+        <div v-show="mode !== 'forgot' && mode !== 'reset'" class="flex">
+          <vs-checkbox v-model="data.remember">
+            <template #icon> <i class="bx bx-check"></i> </template>
+            {{ $t("rememberMe") }}
+          </vs-checkbox>
+          <a @click="mode = 'forgot'">{{ $t("forgotPassword") }}</a>
+        </div>
       </div>
 
       <template #footer>
-        <div v-if="registerMode" class="footer-dialog">
+        <div v-if="mode === 'forgot'" class="footer-dialog">
+          <vs-button
+            block
+            @click="forgotPassword"
+            :disabled="forgotDisabled"
+            :aria-label="$t('requestPasswordReset')"
+            >{{ $t("requestPasswordReset") }}</vs-button
+          >
+        </div>
+        <div v-else-if="mode === 'reset'" class="footer-dialog">
+          <vs-button
+            block
+            @click="setPassword"
+            :disabled="resetDisabled"
+            :aria-label="$t('resetPassword')"
+            >{{ $t("resetPassword") }}</vs-button
+          >
+        </div>
+        <div v-else-if="mode === 'register'" class="footer-dialog">
           <vs-button
             block
             @click="signUp"
@@ -67,7 +104,7 @@
 
           <div class="new">
             {{ $t("existingUser")
-            }}<a @click="registerMode = false">{{ $t("signIn") }}</a>
+            }}<a @click="mode = 'login'">{{ $t("signIn") }}</a>
           </div>
         </div>
         <div v-else class="footer-dialog">
@@ -81,7 +118,7 @@
 
           <div class="new">
             {{ $t("newUser")
-            }}<a @click="registerMode = true">{{ $t("createAccount") }}</a>
+            }}<a @click="mode = 'register'">{{ $t("createAccount") }}</a>
           </div>
         </div>
       </template>
@@ -99,13 +136,15 @@ export default {
       email: "",
       password: "",
       confirmPassword: "",
+      remember: false,
+      resetToken: "",
     },
     errors: {
       email: "",
       password: "",
       confirmPassword: "",
     },
-    registerMode: false,
+    mode: "login",
   }),
   computed: {
     ...mapState(["user"]),
@@ -115,12 +154,29 @@ export default {
     signUpDisabled() {
       return !!(this.signInDisabled || this.errors.confirmPassword);
     },
+    forgotDisabled() {
+      return !!this.errors.email;
+    },
+    resetDisabled() {
+      return !!(this.errors.password || this.errors.confirmPassword);
+    },
   },
   mounted() {
-    if (!this.user.email) this.active = true;
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const params = Object.fromEntries(urlSearchParams.entries());
+    if (params.password_reset) {
+      this.active = true;
+      this.mode = "reset";
+      this.data.resetToken = params.password_reset;
+    } else if (!this.user.email) this.active = true;
   },
   methods: {
-    ...mapActions(["login", "register"]),
+    ...mapActions([
+      "login",
+      "register",
+      "requestPasswordReset",
+      "resetPassword",
+    ]),
     signIn() {
       if (this.validateField("email") && this.validateField("password")) {
         this.loading = true;
@@ -135,6 +191,24 @@ export default {
       ) {
         this.loading = true;
         this.register(this.data).then(() => (this.active = false));
+      }
+    },
+    forgotPassword() {
+      if (this.validateField("email")) {
+        this.loading = true;
+        this.requestPasswordReset(this.data).then(() => (this.active = false));
+      }
+    },
+    setPassword() {
+      if (
+        this.validateField("password") &&
+        this.validateField("confirmPassword")
+      ) {
+        this.loading = true;
+        this.resetPassword(this.data).then(() => {
+          this.mode = "login";
+          this.loading = false;
+        });
       }
     },
     validateField(field) {
@@ -169,19 +243,20 @@ export default {
         this.data.email = "";
         this.data.password = "";
         this.data.confirmPassword = "";
+        this.data.remember = false;
 
         this.errors.email = "";
         this.errors.password = "";
         this.errors.confirmPassword = "";
 
-        this.registerMode = false;
+        if (this.mode !== "reset") this.mode = "login";
         this.loading = false;
       },
       immediate: true,
     },
     user: {
       handler(val) {
-        if (val.email) {
+        if (val.email && this.mode !== "reset") {
           this.active = false;
         }
       },

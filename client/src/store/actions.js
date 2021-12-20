@@ -2,6 +2,12 @@ import http from "@/plugins/axios";
 import Vue from "vue";
 import i18n from "@/i18n";
 
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(";").shift();
+}
+
 export default {
   deleteBook: ({ commit, dispatch }, payload) => {
     commit("deleteBook", payload);
@@ -42,6 +48,10 @@ export default {
     });
   },
   getUserData: ({ commit, dispatch }) => {
+    if (getCookie("refresh_token_cookie")) {
+      http.get("/refresh");
+    }
+
     return http
       .get("/user-data")
       .then((res) => {
@@ -50,7 +60,7 @@ export default {
         dispatch("getCountryData");
       })
       .catch(() => {
-        commit("setUserData", { email: null });
+        commit("clearState");
       });
   },
   getSettings: ({ commit }) => {
@@ -67,6 +77,7 @@ export default {
     const data = {
       email: payload.email,
       password: payload.password,
+      remember: payload.remember,
     };
     return http
       .post("/login", data)
@@ -88,6 +99,7 @@ export default {
     const data = {
       email: payload.email,
       password: payload.password,
+      remember: payload.remember,
     };
     return http
       .post("/register", data)
@@ -108,8 +120,48 @@ export default {
   logout: ({ commit }) => {
     return http.post("/logout").then(() => {
       commit("clearState");
-      window.location.reload();
+      window.localStorage.clear();
     });
+  },
+  requestPasswordReset: ({ dispatch }, payload) => {
+    const data = {
+      email: payload.email,
+    };
+    return http
+      .post("/request-password-reset", data)
+      .then(() => {
+        dispatch("toast", {
+          text: "passwordResetRequested",
+          type: "success",
+        });
+      })
+      .catch(() => {
+        dispatch("toast", {
+          text: "passwordResetFailed",
+          type: "error",
+        });
+      });
+  },
+  resetPassword: ({ dispatch }, payload) => {
+    const data = {
+      password: payload.password,
+      reset_token: payload.resetToken,
+    };
+    return http
+      .post("/reset-password", data)
+      .then(() => {
+        dispatch("toast", {
+          text: "passwordResetSuccess",
+          type: "success",
+        });
+        window.location = window.location.href.split("?")[0];
+      })
+      .catch(() => {
+        dispatch("toast", {
+          text: "passwordResetFailed",
+          type: "error",
+        });
+      });
   },
   toast: (_, payload) => {
     Vue.toasted.show(i18n.t(payload.text), {

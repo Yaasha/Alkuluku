@@ -1,12 +1,17 @@
 from flask import Blueprint, current_app, request, jsonify
+from flask.helpers import url_for
 from mongoengine.errors import DoesNotExist
 from database import User
-from forms import UserSchema, DataSchema
+from forms import UserSchema, DataSchema, RequestPasswordResetSchema, ResetPasswordSchema
 from marshmallow import ValidationError
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token, set_access_cookies, set_refresh_cookies, create_refresh_token
 from flask_jwt_extended import unset_jwt_cookies, jwt_required
 from flask_jwt_extended import current_user
+from itsdangerous import URLSafeSerializer
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
+from datetime import datetime, timedelta, timezone
 
 
 routes = Blueprint('routes', __name__)
@@ -64,14 +69,22 @@ def country_data():
 
 
 @routes.route('/user-data', methods=['GET'])
-@jwt_required(refresh=True)
+@jwt_required()
 def user_data():
-    access_token = create_access_token(identity=current_user)
-    response = jsonify({
+    return jsonify({
         "status": "success",
         "data": {
             "email": current_user.email,
         },
+    })
+
+
+@routes.route("/refresh", methods=["POST"])
+@jwt_required(refresh=True)
+def refresh():
+    access_token = create_access_token(identity=current_user)
+    response = jsonify({
+        "status": "success",
     })
     set_access_cookies(response, access_token)
     return response
@@ -108,7 +121,8 @@ def register():
 
             response = jsonify(message="User successfully registered")
             set_access_cookies(response, access_token)
-            set_refresh_cookies(response, refresh_token)
+            if data["remember"]:
+                set_refresh_cookies(response, refresh_token)
 
             return response, 201
     except ValidationError as err:
@@ -131,7 +145,8 @@ def login():
 
                 response = jsonify(message="User successfully logged in")
                 set_access_cookies(response, access_token)
-                set_refresh_cookies(response, refresh_token)
+                if data["remember"]:
+                    set_refresh_cookies(response, refresh_token)
                 return response, 200
             else:
                 return jsonify(message="Unauthorized"), 401
@@ -147,6 +162,65 @@ def logout():
     response = jsonify(message="User successfully logged out")
     unset_jwt_cookies(response)
     return response, 200
+
+
+@routes.route('/request-password-reset', methods=['POST'])
+def request_password_reset():
+    schema = RequestPasswordResetSchema()
+
+    try:
+        data = schema.load(request.get_json())
+        try:
+            user = User.objects.get(email=data['email'])
+
+            serializer = URLSafeSerializer(current_app.config.get("SECRET_KEY"))
+            created_at = datetime.now()
+            expires_at = created_at + timedelta(hours=1)
+            reset_token = serializer.dumps((user.email, created_at.isoformat(), expires_at.isoformat()))
+
+            message = Mail(
+                from_email=current_app.config.get("FROM_EMAIL"),
+                to_emails=user.email)
+            message.dynamic_template_data = {
+                "password_link": url_for("routes.index", password_reset=reset_token, _external=True)
+            }
+            message.template_id = "d-bc219bf7ddb04feda7dffce318f1e22e"
+            
+            sg = SendGridAPIClient(current_app.config.get("SENDGRID_API_KEY"))
+            response = sg.send(message)
+            code, body, headers = response.status_code, response.body, response.headers
+            return jsonify(message="Password reset link sent")
+        except Exception:
+            return jsonify(message="Password reset link sent")
+    except ValidationError as err:
+        return {"errors": err.messages}, 422
+
+
+@routes.route('/reset-password', methods=['POST'])
+def reset_password():
+    schema = ResetPasswordSchema()
+
+    try:
+        data = schema.load(request.get_json())
+        try:
+            serializer = URLSafeSerializer(current_app.config.get("SECRET_KEY"))
+            email, created_at, expires_at = serializer.loads(data["reset_token"])
+            created_at = datetime.fromisoformat(created_at)
+            expires_at = datetime.fromisoformat(expires_at)
+            
+            now = datetime.now()
+            user = User.objects.get(email=email)
+            if (not user.last_password_change or user.last_password_change < created_at) and expires_at > now:
+                user.password = generate_password_hash(data['password'])
+                user.last_password_change = now
+                user.save()
+                return jsonify(message="Password reset successfully")
+            
+            return jsonify(message="An error occured"), 400
+        except Exception:
+            return jsonify(message="An error occured"), 400
+    except ValidationError as err:
+        return {"errors": err.messages}, 422
 
 
 @routes.route('/favicon.ico')
