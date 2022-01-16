@@ -147,7 +147,11 @@
                 <vs-tr>
                   <vs-td colspan="6">
                     <vs-button
-                      @click="localSettings.heatRules.push(defaultHeatRule)"
+                      @click="
+                        localSettings.heatRules.push(
+                          JSON.parse(JSON.stringify(defaultHeatRule))
+                        )
+                      "
                       icon
                       color="success"
                       class="mx-auto"

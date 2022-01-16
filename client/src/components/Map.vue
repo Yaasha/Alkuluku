@@ -132,6 +132,14 @@ export default {
       },
       deep: true,
     },
+    "settings.heatRules": {
+      async handler(newVal, oldVal) {
+        if (!equal(newVal, oldVal)) {
+          this.buildMap();
+        }
+      },
+      deep: true,
+    },
   },
 };
 </script>
