@@ -68,4 +68,5 @@ export default {
   addRule: "Add rule",
   min: "min",
   max: "max",
+  legend: "Legend",
 };

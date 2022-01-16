@@ -68,4 +68,5 @@ export default {
   addRule: "Přidat škálu",
   min: "min",
   max: "max",
+  legend: "Legenda",
 };

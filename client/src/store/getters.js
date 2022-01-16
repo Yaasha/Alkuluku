@@ -39,4 +39,18 @@ export default {
 
     return mapData;
   },
+  minMapValue: (_, getters) => {
+    let minValue = Number.MAX_SAFE_INTEGER;
+    for (let countryData of getters.mapData) {
+      if (countryData.value < minValue) minValue = countryData.value;
+    }
+    return minValue;
+  },
+  maxMapValue: (_, getters) => {
+    let maxValue = Number.MIN_SAFE_INTEGER;
+    for (let countryData of getters.mapData) {
+      if (countryData.value > maxValue) maxValue = countryData.value;
+    }
+    return maxValue;
+  },
 };

@@ -16,7 +16,7 @@ export default {
   },
   computed: {
     ...mapState(["settings"]),
-    ...mapGetters(["mapData"]),
+    ...mapGetters(["mapData", "minMapValue", "maxMapValue"]),
   },
   methods: {
     async buildMap() {
@@ -48,23 +48,16 @@ export default {
             new am4maps.MapPolygonSeries()
           );
           // set fill color
-          let minValue = Number.MAX_SAFE_INTEGER;
-          let maxValue = Number.MIN_SAFE_INTEGER;
-          for (let countryData of this.mapData) {
-            if (countryData.value > maxValue) maxValue = countryData.value;
-            if (countryData.value < minValue) minValue = countryData.value;
-          }
-          const heatRules = this.settings.heatRules;
           this.polygonSeries.mapPolygons.template.adapter.add(
             "fill",
-            function (fill, target) {
-              for (let heatRule of heatRules) {
+            (fill, target) => {
+              for (let heatRule of this.settings.heatRules) {
                 let value = target.dataItem.value;
                 let heatRuleMin = isNaN(parseInt(heatRule.min))
-                  ? minValue
+                  ? this.minMapValue
                   : parseInt(heatRule.min);
                 let heatRuleMax = isNaN(parseInt(heatRule.max))
-                  ? maxValue
+                  ? this.maxMapValue
                   : parseInt(heatRule.max);
                 if (value >= heatRuleMin && value <= heatRuleMax) {
                   if (heatRule.gradient && heatRuleMin !== heatRuleMax) {

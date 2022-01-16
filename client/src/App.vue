@@ -2,6 +2,7 @@
   <v-app id="app">
     <Menu />
     <Map />
+    <Legend />
     <v-style>
       {{ scrollBarStyle }}
     </v-style>
@@ -16,6 +17,7 @@ export default {
   components: {
     Map: () => import("@/components/Map.vue"),
     Menu: () => import("@/components/Menu.vue"),
+    Legend: () => import("@/components/Legend.vue"),
   },
   methods: {
     ...mapActions(["getUserData"]),
