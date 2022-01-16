@@ -157,7 +157,6 @@ def login():
 
 
 @routes.route('/logout', methods=['POST'])
-@jwt_required()
 def logout():
     response = jsonify(message="User successfully logged out")
     unset_jwt_cookies(response)
