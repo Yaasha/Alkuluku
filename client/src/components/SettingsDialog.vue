@@ -34,44 +34,8 @@
             sm="6"
             xs="12"
           >
-            <span>{{ $t("minColor") }}</span>
-            <color-picker v-model="localSettings.minColor" />
-          </vs-col>
-          <vs-col
-            class="pa-2"
-            vs-type="flex"
-            vs-justify="center"
-            vs-align="center"
-            w="3"
-            sm="6"
-            xs="12"
-          >
-            <span>{{ $t("maxColor") }}</span>
-            <color-picker v-model="localSettings.maxColor" />
-          </vs-col>
-          <vs-col
-            class="pa-2"
-            vs-type="flex"
-            vs-justify="center"
-            vs-align="center"
-            w="3"
-            sm="6"
-            xs="12"
-          >
             <span>{{ $t("strokeColor") }}</span>
             <color-picker v-model="localSettings.strokeColor" />
-          </vs-col>
-          <vs-col
-            class="pa-2"
-            vs-type="flex"
-            vs-justify="center"
-            vs-align="center"
-            w="3"
-            sm="6"
-            xs="12"
-          >
-            <span>{{ $t("hoverColor") }}</span>
-            <color-picker v-model="localSettings.hoverColor" />
           </vs-col>
           <vs-col
             class="pa-2 my-auto"
@@ -112,6 +76,90 @@
                 >{{ lang.name }}</vs-option
               >
             </vs-select>
+          </vs-col>
+        </vs-row>
+        <vs-row class="mt-2">
+          <vs-col>
+            <span class="mx-auto">{{ $t("mapColorRules") }}</span>
+            <vs-table>
+              <template #thead>
+                <vs-tr>
+                  <vs-th class="text-center">{{ $t("minValue") }}</vs-th>
+                  <vs-th>{{ $t("minValueColor") }}</vs-th>
+                  <vs-th>{{ $t("maxValue") }}</vs-th>
+                  <vs-th>{{ $t("maxValueColor") }}</vs-th>
+                  <vs-th>{{ $t("gradient") }}</vs-th>
+                  <vs-th>{{ $t("deleteRule") }}</vs-th>
+                </vs-tr>
+              </template>
+              <template #tbody>
+                <vs-tr
+                  :key="i"
+                  v-for="(heatRule, i) in localSettings.heatRules"
+                  :data="heatRule"
+                >
+                  <vs-td max-width="150px">
+                    <vs-input
+                      class="input-number"
+                      v-mask="'#####'"
+                      v-model="heatRule.min"
+                      :placeholder="$t('min')"
+                    />
+                  </vs-td>
+                  <vs-td>
+                    <color-picker v-model="heatRule.minColor" />
+                  </vs-td>
+                  <vs-td>
+                    <vs-input
+                      class="input-number"
+                      v-mask="'#####'"
+                      v-model="heatRule.max"
+                      :placeholder="$t('max')"
+                    />
+                  </vs-td>
+                  <vs-td>
+                    <color-picker
+                      v-model="heatRule.maxColor"
+                      :disabled="!heatRule.gradient"
+                    />
+                  </vs-td>
+                  <vs-td>
+                    <vs-checkbox
+                      v-model="heatRule.gradient"
+                      class="input-checkbox"
+                    >
+                      <template #icon> <i class="bx bx-check"></i> </template>
+                    </vs-checkbox>
+                  </vs-td>
+                  <vs-td>
+                    <vs-button
+                      :disabled="i === 0"
+                      icon
+                      color="danger"
+                      border
+                      @click.stop="localSettings.heatRules.splice(i, 1)"
+                      :aria-label="$t('deleteRule')"
+                    >
+                      <i class="bx bxs-trash"></i>
+                    </vs-button>
+                  </vs-td>
+                </vs-tr>
+                <vs-tr>
+                  <vs-td colspan="6">
+                    <vs-button
+                      @click="localSettings.heatRules.push(defaultHeatRule)"
+                      icon
+                      color="success"
+                      class="mx-auto"
+                      :aria-label="$t('addRule')"
+                    >
+                      <i class="bx bx-plus"></i>
+                      {{ $t("addRule") }}
+                    </vs-button>
+                  </vs-td>
+                </vs-tr>
+              </template>
+            </vs-table>
           </vs-col>
         </vs-row>
       </div>
@@ -175,6 +223,7 @@
 </template>
 <script>
 import { mapState, mapGetters, mapActions } from "vuex";
+import { defaultSettings } from "@/consts";
 
 export default {
   props: ["value"],
@@ -188,6 +237,7 @@ export default {
       search: "",
       items: [],
       localSettings: {},
+      defaultHeatRule: defaultSettings.heatRules[0],
     };
   },
   computed: {
@@ -224,17 +274,7 @@ export default {
       this.active = false;
     },
     reset() {
-      this.localSettings = JSON.parse(
-        JSON.stringify({
-          backgroundColor: "#30303c",
-          strokeColor: "#2f2f30",
-          minColor: "#39393b",
-          maxColor: "#5c9dbd",
-          hoverColor: "#5d7fbc",
-          theme: "dark",
-          locale: "en-GB",
-        })
-      );
+      this.localSettings = JSON.parse(JSON.stringify(defaultSettings));
       this.save();
     },
   },
@@ -253,4 +293,14 @@ export default {
   },
 };
 </script>
-<style lang="scss"></style>
+<style lang="scss">
+.input-number div input {
+  max-width: 75px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.input-checkbox .vs-checkbox-con {
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>

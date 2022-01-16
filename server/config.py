@@ -15,7 +15,6 @@ class Config(object):
     }
     
     JWT_TOKEN_LOCATION = ['cookies']
-    JWT_REFRESH_COOKIE_PATH = '/user-data'
 
     FROM_EMAIL = "email@alkuluku.io"
     SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY')

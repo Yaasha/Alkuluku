@@ -1,4 +1,5 @@
 import Vue from "vue";
+import { defaultSettings } from "@/consts";
 
 function guid() {
   let s4 = () => {
@@ -41,7 +42,7 @@ export default {
     });
   },
   setSettings: (state, payload) => {
-    state.settings = JSON.parse(JSON.stringify(payload));
+    Object.assign(state.settings, JSON.parse(JSON.stringify(payload)));
   },
   setCountries: (state, payload) => {
     state.countries = payload;
@@ -54,15 +55,7 @@ export default {
   },
   clearState: (state) => {
     state.user = { email: null };
-    state.settings = {
-      backgroundColor: "#30303c",
-      strokeColor: "#2f2f30",
-      minColor: "#39393b",
-      maxColor: "#5c9dbd",
-      hoverColor: "#5d7fbc",
-      theme: "dark",
-      locale: "en-GB",
-    };
+    state.settings = defaultSettings;
     state.countryData = {};
   },
 };

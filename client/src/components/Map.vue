@@ -47,14 +47,44 @@ export default {
           this.polygonSeries = this.chart.series.push(
             new am4maps.MapPolygonSeries()
           );
-
-          //Set min/max fill color for each area
-          this.polygonSeries.heatRules.push({
-            property: "fill",
-            target: this.polygonSeries.mapPolygons.template,
-            min: am4core.color(this.settings.minColor),
-            max: am4core.color(this.settings.maxColor),
-          });
+          // set fill color
+          let minValue = Number.MAX_SAFE_INTEGER;
+          let maxValue = Number.MIN_SAFE_INTEGER;
+          for (let countryData of this.mapData) {
+            if (countryData.value > maxValue) maxValue = countryData.value;
+            if (countryData.value < minValue) minValue = countryData.value;
+          }
+          const heatRules = this.settings.heatRules;
+          this.polygonSeries.mapPolygons.template.adapter.add(
+            "fill",
+            function (fill, target) {
+              for (let heatRule of heatRules) {
+                let value = target.dataItem.value;
+                let heatRuleMin = isNaN(parseInt(heatRule.min))
+                  ? minValue
+                  : parseInt(heatRule.min);
+                let heatRuleMax = isNaN(parseInt(heatRule.max))
+                  ? maxValue
+                  : parseInt(heatRule.max);
+                if (value >= heatRuleMin && value <= heatRuleMax) {
+                  if (heatRule.gradient && heatRuleMin !== heatRuleMax) {
+                    var percent =
+                      (value - heatRuleMin) / (heatRuleMax - heatRuleMin);
+                    return new am4core.Color(
+                      am4core.colors.interpolate(
+                        am4core.color(heatRule.minColor).rgb,
+                        am4core.color(heatRule.maxColor).rgb,
+                        percent
+                      )
+                    );
+                  } else {
+                    return am4core.color(heatRule.minColor);
+                  }
+                }
+              }
+              return fill;
+            }
+          );
 
           // Exclude Antartica
           this.polygonSeries.exclude = ["AQ"];
@@ -72,7 +102,10 @@ export default {
 
           // Create hover state and set alternative fill color
           let hoverState = polygonTemplate.states.create("hover");
-          hoverState.properties.fill = am4core.color(this.settings.hoverColor);
+          // hoverState.properties.fill = am4core.color(this.settings.hoverColor);
+          hoverState.adapter.add("fill", function (fill) {
+            return fill.lighten(-0.1);
+          });
         })
         .catch((e) => {
           console.error("Error when creating chart", e);
