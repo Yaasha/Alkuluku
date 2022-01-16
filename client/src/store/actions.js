@@ -2,12 +2,6 @@ import http from "@/plugins/axios";
 import Vue from "vue";
 import i18n from "@/i18n";
 
-function getCookie(name) {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop().split(";").shift();
-}
-
 export default {
   deleteBook: ({ commit, dispatch }, payload) => {
     commit("deleteBook", payload);
@@ -48,10 +42,6 @@ export default {
     });
   },
   getUserData: ({ commit, dispatch }) => {
-    if (getCookie("refresh_token_cookie")) {
-      http.get("/refresh");
-    }
-
     return http
       .get("/user-data")
       .then((res) => {

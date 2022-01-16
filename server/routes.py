@@ -5,7 +5,7 @@ from database import User
 from forms import UserSchema, DataSchema, RequestPasswordResetSchema, ResetPasswordSchema
 from marshmallow import ValidationError
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_jwt_extended import create_access_token, set_access_cookies, set_refresh_cookies, create_refresh_token
+from flask_jwt_extended import create_access_token, set_access_cookies
 from flask_jwt_extended import unset_jwt_cookies, jwt_required
 from flask_jwt_extended import current_user
 from itsdangerous import URLSafeSerializer
@@ -15,6 +15,17 @@ from datetime import datetime, timedelta, timezone
 
 
 routes = Blueprint('routes', __name__)
+
+
+def set_jwt_access_token(response, user, remember=False):
+    if remember:
+        expires_delta = current_app.config.get("JWT_ACCESS_TOKEN_EXPIRES_REMEMBER")
+    else:
+        expires_delta = current_app.config.get("JWT_ACCESS_TOKEN_EXPIRES")
+    access_token = create_access_token(identity=user, 
+                                       expires_delta=expires_delta, 
+                                       additional_claims={"remember": remember})
+    set_access_cookies(response, access_token)
 
 
 @routes.route('/')
@@ -79,17 +90,6 @@ def user_data():
     })
 
 
-@routes.route("/refresh", methods=["POST"])
-@jwt_required(refresh=True)
-def refresh():
-    access_token = create_access_token(identity=current_user)
-    response = jsonify({
-        "status": "success",
-    })
-    set_access_cookies(response, access_token)
-    return response
-
-
 @routes.route('/register', methods=['POST'])
 def register():
     schema = UserSchema()
@@ -107,13 +107,9 @@ def register():
             )
 
             user.save()
-            access_token = create_access_token(identity=user)
-            refresh_token = create_refresh_token(identity=user)
 
             response = jsonify(message="User successfully registered")
-            set_access_cookies(response, access_token)
-            if data["remember"]:
-                set_refresh_cookies(response, refresh_token)
+            set_jwt_access_token(response, user, data["remember"])
 
             return response, 201
     except ValidationError as err:
@@ -131,13 +127,8 @@ def login():
             user = User.objects.get(email=data['email'])
             
             if check_password_hash(user.password, data['password']):
-                access_token = create_access_token(identity=user)
-                refresh_token = create_refresh_token(identity=user)
-
                 response = jsonify(message="User successfully logged in")
-                set_access_cookies(response, access_token)
-                if data["remember"]:
-                    set_refresh_cookies(response, refresh_token)
+                set_jwt_access_token(response, user, data["remember"])
                 return response, 200
             else:
                 return jsonify(message="Unauthorized"), 401

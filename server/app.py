@@ -1,8 +1,8 @@
 from config import Config
-from routes import routes
+from routes import routes, set_jwt_access_token
 from flask import Flask
 from database import db, User
-from flask_jwt_extended import JWTManager, create_access_token, set_access_cookies, get_jwt_identity, get_jwt
+from flask_jwt_extended import JWTManager, get_jwt_identity, get_jwt
 from flask_cors import CORS
 from datetime import datetime, timedelta, timezone
 from mongoengine.errors import DoesNotExist
@@ -46,11 +46,15 @@ def create_app():
     def refresh_expiring_jwts(response):
         try:
             exp_timestamp = get_jwt()["exp"]
+            remember = get_jwt().get("remember")
             now = datetime.now(timezone.utc)
-            target_timestamp = datetime.timestamp(now + timedelta(minutes=30))
+            if remember:
+                target_timestamp = datetime.timestamp(now + timedelta(days=15))
+            else:
+                target_timestamp = datetime.timestamp(now + timedelta(minutes=30))
+
             if target_timestamp > exp_timestamp:
-                access_token = create_access_token(identity=get_jwt_identity())
-                set_access_cookies(response, access_token)
+                set_jwt_access_token(response, get_jwt_identity(), remember)
             return response
         except (RuntimeError, KeyError):
             # Case where there is not a valid JWT. Just return the original respone

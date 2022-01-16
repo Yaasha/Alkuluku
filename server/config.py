@@ -15,6 +15,8 @@ class Config(object):
     }
     
     JWT_TOKEN_LOCATION = ['cookies']
+    JWT_ACCESS_TOKEN_EXPIRES_REMEMBER = timedelta(days=30)
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)
 
     FROM_EMAIL = "email@alkuluku.io"
     SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY')
