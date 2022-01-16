@@ -14,7 +14,7 @@ export default {
   bookData: (state) => {
     let mapData = Object.keys(state.countries).map((countryId) => {
       let books = state.countryData[countryId]?.books;
-      let lastAdded = books
+      let lastAdded = books?.length
         ? Object.values(books).reduce((a, b) => (a.addedOn > b.addedOn ? a : b))
             .addedOn
         : "";

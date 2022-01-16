@@ -64,12 +64,6 @@ export default {
   computed: {
     ...mapState(["settings"]),
     ...mapGetters(["minMapValue", "maxMapValue"]),
-    legendContainerStyle() {
-      return {
-        backgroundColor: this.settings.theme === "dark" ? "#1f2024" : "#fff",
-        color: this.settings.theme === "dark" ? "#fff" : "#1f2024",
-      };
-    },
   },
   created() {
     window.addEventListener("resize", this.detectDesktop);
