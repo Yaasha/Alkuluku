@@ -22,8 +22,17 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       -
+        name: Docker meta
+        uses: docker/metadata-action@v4
+        id: meta
+        with:
+          images: yaasha/alkuluku
+          tags: |
+            type=raw,value=latest
+            type=raw,value={{date 'YY-MM-d'}}
+      -
         name: Build and push
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: yaasha/alkuluku:latest
+          tags: ${{steps.meta.outputs.tags}}
