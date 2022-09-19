@@ -26,10 +26,13 @@ jobs:
         uses: docker/metadata-action@v4
         id: meta
         with:
-          images: name/app
+          images: yaasha/alkuluku
+          tags: |
+            type=raw,value=latest
+            type=raw,pattern={{date 'YY-MM-d'}}
       -
         name: Build and push
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: yaasha/alkuluku:latest , yaasha/alkuluku:{{steps.meta.outputs.date 'YY-MM-d'}}
+          tags: ${{steps.meta.outputs.tags}}
