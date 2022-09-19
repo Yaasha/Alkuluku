@@ -29,7 +29,7 @@ jobs:
           images: yaasha/alkuluku
           tags: |
             type=raw,value=latest
-            type=raw,pattern={{date 'YY-MM-d'}}
+            type=raw,value={{date 'YY-MM-d'}}
       -
         name: Build and push
         uses: docker/build-push-action@v3
