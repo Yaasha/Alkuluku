@@ -35,6 +35,4 @@ NOTE: you will need to setup your mongodb separately to store the user data
       - FLASK_SECRET=<RANDOM_SECRET>
       - MONGODB_URI=<YOUR_MONGODB_INSTANCE>
       - SENDGRID_API_KEY=<YOUR_SENDGRID_KEY_FOR_RESET_EMAIL>
-    networks:
-      - authentik
 ```
