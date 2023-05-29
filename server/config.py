@@ -15,6 +15,7 @@ class Config(object):
     }
     
     JWT_TOKEN_LOCATION = ['cookies']
+    JWT_SESSION_COOKIE = False
     JWT_ACCESS_TOKEN_EXPIRES_REMEMBER = timedelta(days=30)
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)
 
