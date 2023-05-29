@@ -9,6 +9,7 @@ import { mapState, mapMutations } from "vuex";
 import i18n from "@/i18n";
 import VueTheMask from "vue-the-mask";
 import "@/registerServiceWorker";
+import { excludedCountries } from "@/consts";
 
 Vue.config.productionTip = false;
 
@@ -48,14 +49,18 @@ new Vue({
                 cs: modules[2].default,
               };
 
-              const countries = Object.keys(allCountries).map((countryId) => {
-                return [
-                  countryId,
-                  countryNames[lang][countryId]
-                    ? countryNames[lang][countryId]
-                    : allCountries[countryId].country,
-                ];
-              });
+              const countries = Object.keys(allCountries)
+                .filter(
+                  (countryId) => excludedCountries.indexOf(countryId) === -1
+                )
+                .map((countryId) => {
+                  return [
+                    countryId,
+                    countryNames[lang][countryId]
+                      ? countryNames[lang][countryId]
+                      : allCountries[countryId].country,
+                  ];
+                });
 
               this.setCountries(Object.fromEntries(countries));
             })

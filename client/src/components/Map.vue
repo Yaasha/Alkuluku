@@ -4,6 +4,7 @@
 
 <script>
 import { mapState, mapGetters } from "vuex";
+import { excludedCountries } from "@/consts";
 const equal = require("fast-deep-equal");
 
 export default {
@@ -79,8 +80,8 @@ export default {
             }
           );
 
-          // Exclude Antartica
-          this.polygonSeries.exclude = ["AQ"];
+          // Exclude fake countries
+          this.polygonSeries.exclude = excludedCountries;
           this.polygonSeries.data = this.mapData;
 
           // Make map load polygon (like country names) data from GeoJSON

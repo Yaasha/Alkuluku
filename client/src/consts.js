@@ -14,4 +14,33 @@ const defaultSettings = {
   ],
 };
 
-export { defaultSettings };
+const excludedCountries = [
+  "AQ",
+  "AX",
+  "BV",
+  "IM",
+  "SJ",
+  "TF",
+  "GS",
+  "MO",
+  "GG",
+  "JE",
+  "YT",
+  "NF",
+  "BQ",
+  "UM",
+  "IO",
+  "HM",
+  "SH",
+  "CX",
+  "FK",
+  "CC",
+  "PN",
+  "TC",
+  "PM",
+  "TK",
+  "GU",
+  "MS",
+];
+
+export { defaultSettings, excludedCountries };
