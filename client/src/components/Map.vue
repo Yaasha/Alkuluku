@@ -43,6 +43,7 @@ export default {
 
           // Set projection
           this.chart.projection = new am4maps.projections.Miller();
+          this.chart.deltaLongitude = -10;
 
           // Create map polygon series
           this.polygonSeries = this.chart.series.push(
