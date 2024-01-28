@@ -69,4 +69,5 @@ export default {
   min: "min",
   max: "max",
   legend: "Legenda",
+  screenshot: "Snímek obrazovky",
 };

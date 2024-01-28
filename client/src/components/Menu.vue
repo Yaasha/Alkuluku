@@ -44,6 +44,16 @@
         <i class="bx bx-cog"></i>
       </vs-button>
       <vs-button
+        @click="screenshot"
+        circle
+        icon
+        floating
+        color="warn"
+        :aria-label="$t('screenshot')"
+      >
+        <i class="bx bx-camera"></i>
+      </vs-button>
+      <vs-button
         @click="logout"
         circle
         icon
@@ -62,6 +72,7 @@
 </template>
 <script>
 import { mapState, mapActions } from "vuex";
+import html2canvas from "html2canvas";
 
 export default {
   components: {
@@ -84,6 +95,28 @@ export default {
   },
   methods: {
     ...mapActions(["logout"]),
+    screenshot() {
+      const loading = this.$vs.loading();
+      document.querySelector("body title").parentElement.style.visibility =
+        "hidden";
+
+      const captureElement = document.querySelector("#map");
+      html2canvas(captureElement).then((canvas) => {
+        canvas.style.display = "none";
+        document.body.appendChild(canvas);
+
+        const image = canvas.toDataURL("image/png");
+        const a = document.createElement("a");
+        a.setAttribute("download", "alkuluku-map.png");
+        a.setAttribute("href", image);
+        a.click();
+        canvas.remove();
+
+        document.querySelector("body title").parentElement.style.visibility =
+          "unset";
+        loading.close();
+      });
+    },
   },
   watch: {
     speedDial(val) {
